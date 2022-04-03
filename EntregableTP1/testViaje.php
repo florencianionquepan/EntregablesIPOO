@@ -83,7 +83,8 @@ function solicitarDatosPersona($cont){
     return $arrayPasajero;
 }
 
-//La modificación de un viaje no permite cambiar el numero máximo de pasajeros
+//La modificación de un viaje no permite sumar pasajeros. Solo se permite cambiar los datos. 
+//En ese caso podrá crearse un nuevo viaje con la opcion 1)
 function modificarViaje($obj){
     echo "Ingrese el nuevo código del viaje: ";
     $codNuevo=trim(fgets(STDIN));
@@ -91,7 +92,8 @@ function modificarViaje($obj){
     echo "Ingrese el nuevo destino: ";
     $destNuevo=trim(fgets(STDIN));
     $obj->setDestino($destNuevo);
-    echo "Numero máximo de pasajeros seguirá siendo: ".$obj->getCantMaximaPasajeros()."\n";
+    $cantMaximaPasajeros=solicitarCapMaxima($obj);
+    $obj->setCantMaximaPasajeros($cantMaximaPasajeros);
     //Para modificar los pasajeros, se va a recorrer la lista existente y se irá seteando pasajero
     //por pasajero con datos que irá ingresando el usuario: 
     $pasajeros=$obj->getPasajeros();
@@ -102,6 +104,17 @@ function modificarViaje($obj){
         $nuevoDni=$nuevoPasajero["dni"];
         $obj->modificarPasajero($i,$nuevoNombre,$nuevoApellido,$nuevoDni);
     }
+}
+
+function solicitarCapMaxima($obj){
+    $cantPasajeros=count($obj->getPasajeros());
+    echo "Ingrese la capacidad máxima de pasajeros: ";
+    $nuevaCapMaxima=trim(fgets(STDIN));
+    while ($nuevaCapMaxima<$cantPasajeros){
+        echo "Por favor, debe ingresar una capacidad mayor o igual a la cantidad actual de pasajeros. De lo contrario, cree un nuevo viaje: ";
+        $nuevaCapMaxima=trim(fgets(STDIN));
+    }
+    return $nuevaCapMaxima;
 }
 
 menuOpciones($objViaje);
