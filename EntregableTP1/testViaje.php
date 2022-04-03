@@ -94,8 +94,8 @@ function modificarViaje($obj){
     echo "Numero máximo de pasajeros seguirá siendo: ".$obj->getCantMaximaPasajeros()."\n";
     //Para modificar los pasajeros, se va a recorrer la lista existente y se irá seteando pasajero
     //por pasajero con datos que irá ingresando el usuario: 
-    $cantPasajeros=$obj->getPasajeros();
-    for ($i=0;$i<count($cantPasajeros);$i++){
+    $pasajeros=$obj->getPasajeros();
+    for ($i=0;$i<count($pasajeros);$i++){
         $nuevoPasajero=solicitarDatosPersona($i);
         $nuevoNombre=$nuevoPasajero["nombre"];
         $nuevoApellido=$nuevoPasajero["apellido"];
