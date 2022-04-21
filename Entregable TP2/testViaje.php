@@ -129,6 +129,7 @@ function cargarResponsable(){
     echo "Ingrese apellido: ";
     $apellido=trim(fgets(STDIN));
     $objResp=new ResponsableV($num,$licencia,$nombre,$apellido);
+    return $objResp;
 }
 
 function modificarViaje($obj){
