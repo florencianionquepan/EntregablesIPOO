@@ -133,9 +133,9 @@ function modificarPasajero($obj){
             $nuevoApellido=trim(fgets(STDIN));
             $obj->modificarPasajero($ind,$pasajero["nombre"], $nuevoApellido,$pasajero["dni"]);
             break;
-    case 3:echo "Ingrese el apellido de la persona a modificar el dni: ";
-            $apellido=trim(fgets(STDIN));
-            $datos=$obj->buscarPasajero($apellido);
+    case 3:echo "Ingrese el dni de la persona a modificar el dni: ";
+            $dni=trim(fgets(STDIN));
+            $datos=$obj->buscarPasajero($dni);
             if ($datos=="error"){
                 echo "No existe un pasajero con ese dato";
                 break;

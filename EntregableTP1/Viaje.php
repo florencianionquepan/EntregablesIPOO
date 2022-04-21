@@ -71,23 +71,15 @@ class Viaje{
     }
 
 
-    //Me retorna el pasajero encontrado por dni o apellido, y el indice en el que se encuentra en el array:
+    //Me retorna el pasajero encontrado por dni, y el indice en el que se encuentra en el array:
     public function buscarPasajero($parametro){
         $arrayPasajeros=$this->getPasajeros();
         $i=0;
         $encontrado=false;
         while ($i<count($arrayPasajeros) && !$encontrado){
             $dniPasajero=$arrayPasajeros[$i]["dni"];
-            $apellidoPasajero=$arrayPasajeros[$i]["apellido"];
-            //cuando el parametro es el dni:
+            //el parametro es el dni:
             if ($dniPasajero==$parametro){
-                $encontrado=true;
-                $pasajero=$arrayPasajeros[$i];
-                $indice=$i;
-                $datos=[$pasajero,$indice];
-            }
-            //cuando el parametro es el apellido:
-            if ($apellidoPasajero==$parametro){
                 $encontrado=true;
                 $pasajero=$arrayPasajeros[$i];
                 $indice=$i;
