@@ -70,12 +70,43 @@ class Viaje{
         return $infoPersonas;
     }
 
-    public function modificarPasajero($ind,$nuevoNombre,$nuevoApellido,$nuevoDni){
+
+    //Me retorna el pasajero encontrado por dni o apellido, y el indice en el que se encuentra en el array:
+    public function buscarPasajero($parametro){
+        $arrayPasajeros=$this->getPasajeros();
+        $i=0;
+        $encontrado=false;
+        while ($i<count($arrayPasajeros) && !$encontrado){
+            $dniPasajero=$arrayPasajeros[$i]["dni"];
+            $apellidoPasajero=$arrayPasajeros[$i]["apellido"];
+            //cuando el parametro es el dni:
+            if ($dniPasajero==$parametro){
+                $encontrado=true;
+                $pasajero=$arrayPasajeros[$i];
+                $indice=$i;
+                $datos=[$pasajero,$indice];
+            }
+            //cuando el parametro es el apellido:
+            if ($apellidoPasajero==$parametro){
+                $encontrado=true;
+                $pasajero=$arrayPasajeros[$i];
+                $indice=$i;
+                $datos=[$pasajero,$indice];
+            }
+            $i++;
+        }
+        if ($i>count($arrayPasajeros)){
+            return "error";
+        }
+        return $datos;
+    }
+
+    public function modificarPasajero($ind,$nombre,$apellido,$dni){
         $arrayPasajeros=$this->getPasajeros();
         $fcModificar=$arrayPasajeros[$ind];
-        $fcModificar["nombre"]=$nuevoNombre;
-        $fcModificar["apellido"]=$nuevoApellido;
-        $fcModificar["dni"]=$nuevoDni;
+        $fcModificar["nombre"]=$nombre;
+        $fcModificar["apellido"]=$apellido;
+        $fcModificar["dni"]=$dni;
         $arrayPasajeros[$ind]=$fcModificar;
         $this->setPasajeros($arrayPasajeros);
         return $arrayPasajeros;

@@ -86,6 +86,71 @@ function solicitarDatosPersona($cont){
 //La modificación de un viaje no permite sumar pasajeros. Solo se permite cambiar los datos. 
 //En ese caso podrá crearse un nuevo viaje con la opcion 1)
 function modificarViaje($obj){
+    echo "Desea modificar codigo y destino y cantidad maxima?(si/no): ";
+    $modifViaje=trim(fgets(STDIN));
+    if ($modifViaje=="si"){
+        modificarDatosViaje($obj);
+    }
+    echo "Desea modificar los datos de algun pasajero?(si/no): ";
+    $modifPasajeros=trim(fgets(STDIN));
+    if ($modifPasajeros=="si"){
+        modificarPasajero($obj);
+    }
+}
+
+function modificarPasajero($obj){
+    echo "Que dato desea modificar? Ingrese 1,2 o 3: \n"
+            ."1) Nombre.\n"
+            ."2) Apellido.\n"
+            ."3) Dni.\n";
+            
+    $eleccion = trim(fgets(STDIN));            
+
+    switch($eleccion){
+    case 1:echo "Ingrese el dni de la persona a modificar el nombre: ";
+            $dni=trim(fgets(STDIN));
+            $datos=$obj->buscarPasajero($dni);
+            if ($datos=="error"){
+                echo "No existe un pasajero con ese dato";
+                break;
+            }
+            $pasajero=$datos[0];
+            $ind=$datos[1];
+            echo "Ingrese el nombre correcto: ";
+            $nuevoNombre=trim(fgets(STDIN));
+            $obj->modificarPasajero($ind,$nuevoNombre,$pasajero["apellido"],$pasajero["dni"]);
+            break;
+    case 2:echo "Ingrese el dni de la persona a modificar el apellido: ";
+            $dni=trim(fgets(STDIN));
+            $datos=$obj->buscarPasajero($dni);
+            if ($datos=="error"){
+                echo "No existe un pasajero con ese dato";
+                break;
+            }
+            $pasajero=$datos[0];
+            $ind=$datos[1];
+            echo "Ingrese el Apellido correcto: ";
+            $nuevoApellido=trim(fgets(STDIN));
+            $obj->modificarPasajero($ind,$pasajero["nombre"], $nuevoApellido,$pasajero["dni"]);
+            break;
+    case 3:echo "Ingrese el apellido de la persona a modificar el dni: ";
+            $apellido=trim(fgets(STDIN));
+            $datos=$obj->buscarPasajero($apellido);
+            if ($datos=="error"){
+                echo "No existe un pasajero con ese dato";
+                break;
+            }
+            $pasajero=$datos[0];
+            $ind=$datos[1];
+            echo "Ingrese el DNI correcto: ";
+            $nuevoDni=trim(fgets(STDIN));
+            $obj->modificarPasajero($ind,$pasajero["nombre"],$pasajero["apellido"],$nuevoDni);
+            break;
+    }
+}
+
+
+function modificarDatosViaje($obj){
     echo "Ingrese el nuevo código del viaje: ";
     $codNuevo=trim(fgets(STDIN));
     $obj->setCodigo($codNuevo);
@@ -94,16 +159,6 @@ function modificarViaje($obj){
     $obj->setDestino($destNuevo);
     $cantMaximaPasajeros=solicitarCapMaxima($obj);
     $obj->setCantMaximaPasajeros($cantMaximaPasajeros);
-    //Para modificar los pasajeros, se va a recorrer la lista existente y se irá seteando pasajero
-    //por pasajero con datos que irá ingresando el usuario: 
-    $pasajeros=$obj->getPasajeros();
-    for ($i=0;$i<count($pasajeros);$i++){
-        $nuevoPasajero=solicitarDatosPersona($i);
-        $nuevoNombre=$nuevoPasajero["nombre"];
-        $nuevoApellido=$nuevoPasajero["apellido"];
-        $nuevoDni=$nuevoPasajero["dni"];
-        $obj->modificarPasajero($i,$nuevoNombre,$nuevoApellido,$nuevoDni);
-    }
 }
 
 function solicitarCapMaxima($obj){
