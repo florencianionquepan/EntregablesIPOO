@@ -141,7 +141,7 @@ function modificarViaje($obj){
     echo "Desea modificar los datos de algun pasajero?(si/no): ";
     $modifPasajeros=trim(fgets(STDIN));
     if ($modifPasajeros=="si"){
-        modificarPasajero($obj);
+        ingresarDatos($obj);
     }
 }
 
@@ -167,7 +167,7 @@ function solicitarCapMaxima($obj){
     return $nuevaCapMaxima;
 }
 
-function modificarPasajero($obj){
+function ingresarDatos($obj){
     echo "Ingrese el dni de la persona a modificar: ";
     $dni=trim(fgets(STDIN));
     $datos=$obj->buscarPasajero($dni);
@@ -176,11 +176,10 @@ function modificarPasajero($obj){
     }else{
         $pasajero=$datos[0];
         $ind=$datos[1];
-        echo "Que dato desea modificar? Ingrese 1,2,3 o 4: \n"
+        echo "Que dato desea modificar? Ingrese 1,2 o 3: \n"
                     ."1) Nombre.\n"
                     ."2) Apellido.\n"
-                    ."3) Dni.\n"
-                    ."4) Telefono.\n";
+                    ."3) Telefono.\n";
                     
         $eleccion = trim(fgets(STDIN));            
         
@@ -193,11 +192,7 @@ function modificarPasajero($obj){
                     $nuevoApellido=trim(fgets(STDIN));
                     $obj->modificarPasajero($ind,$pasajero->getNombre(), $nuevoApellido,$pasajero->getDni(),$pasajero->getTelefono());
                     break;
-            case 3:echo "Ingrese el DNI correcto: ";
-                    $nuevoDni=trim(fgets(STDIN));
-                    $obj->modificarPasajero($ind,$pasajero->getNombre(),$pasajero->getApellido(),$nuevoDni,$pasajero->getTelefono());
-                    break;
-            case 4:echo "Ingrese el telefono correcto: ";
+            case 3:echo "Ingrese el telefono correcto: ";
                     $nuevoTel=trim(fgets(STDIN));
                     $obj->modificarPasajero($ind,$pasajero->getNombre(),$pasajero->getApellido(),$pasajero->getDni(),$nuevoTel);
                     break;
