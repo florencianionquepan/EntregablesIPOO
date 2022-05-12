@@ -8,6 +8,11 @@
  *  La clase Viaje debe hacer referencia al responsable de realizar el viaje.
  */
 
+ /**
+  * La empresa de transporte desea gestionar la información correspondiente a los Viajes que pueden ser: 
+    * Terrestres o Aéreos,   guardar su importe e indicar si el viaje es de ida y vuelta.
+  */
+
 
 class Viaje{
     private $codigo;
@@ -15,13 +20,17 @@ class Viaje{
     private $cantMaximaPasajeros;
     private $pasajeros;
     private $responsableV;
+    private $importe;
+    private $idaVuelta;
 
-    public function __construct($codigo,$destino,$cantMaximaPasajeros,$pasajeros,$responsableV){
+    public function __construct($codigo,$destino,$cantMaximaPasajeros,$pasajeros,$responsableV, $importe, $idaVuelta){
         $this->codigo=$codigo;
         $this->destino=$destino;
         $this->cantMaximaPasajeros=$cantMaximaPasajeros;
         $this->pasajeros=$pasajeros;
         $this->responsableV=$responsableV;
+        $this->importe=$importe;
+        $this->idaVuelta=false;
     }
  
     public function getCodigo(){
@@ -105,7 +114,8 @@ class Viaje{
     public function __toString(){
         return "Codigo del viaje: " .$this->getCodigo(). ". Destino: " .$this->getDestino().
         ".Limite de pasajeros: ".$this->getCantMaximaPasajeros().".Datos de Pasajeros:\n".$this->verPasajeros().
-        "Datos del responsable de viaje: ".$this->getResponsableV(); 
+        "Datos del responsable de viaje: ".$this->getResponsableV()."El importe es: ".$this->getImporte().
+        "Es ida y vuelta?:".$this->getIdaVuelta()? "SI\n":"NO\n";
     }
 
     public function getResponsableV(){
@@ -114,6 +124,22 @@ class Viaje{
 
     public function setResponsableV($responsableV){
         $this->responsableV = $responsableV;
+    }
+
+    public function getImporte(){
+        return $this->importe;
+    }
+
+    public function setImporte($importe){
+        $this->importe = $importe;
+    }
+
+    public function getIdaVuelta(){
+        return $this->idaVuelta;
+    }
+
+    public function setIdaVuelta($idaVuelta){
+        $this->idaVuelta = $idaVuelta;
     }
 }
 
