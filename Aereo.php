@@ -61,7 +61,19 @@
         ". Cantidad de escalas:".$this->getCantEscalas()."\n";
     }
 
-    
+    public function venderPasaje($pasajero){
+        if (parent::hayPasajeDisponible()){
+            $importeNuevo=parent::venderPasaje($pasajero);
+            if ($this->getCategoriaAsiento()=="primera clase"){
+                if ($this->getCantEscalas()==0){
+                    $importeNuevo=$importeNuevo*1.4;
+                }else if($this->getCantEscalas()>0){
+                    $importeNuevo=$importeNuevo*1.6;
+                }
+            }
+            return  $importeNuevo;
+        }
+    }
  }
 
 
