@@ -30,7 +30,7 @@ class Viaje{
         $this->pasajeros=$pasajeros;
         $this->responsableV=$responsableV;
         $this->importe=$importe;
-        $this->idaVuelta=false;
+        $this->idaVuelta=$idaVuelta;
     }
  
     public function getCodigo(){
@@ -115,7 +115,12 @@ class Viaje{
         return "Codigo del viaje: " .$this->getCodigo(). ". Destino: " .$this->getDestino().
         ".Limite de pasajeros: ".$this->getCantMaximaPasajeros().".Datos de Pasajeros:\n".$this->verPasajeros().
         "Datos del responsable de viaje: ".$this->getResponsableV()."El importe es: ".$this->getImporte().
-        "Es ida y vuelta?:".$this->getIdaVuelta()? "SI\n":"NO\n";
+        ". Es ida y vuelta?:".$this->mostrarIdaVuelta()."\n";
+    }
+
+    protected function mostrarIdaVuelta(){
+        $res=$this->getIdaVuelta()? "SI":"NO";
+        return $res;
     }
 
     public function getResponsableV(){
@@ -140,6 +145,32 @@ class Viaje{
 
     public function setIdaVuelta($idaVuelta){
         $this->idaVuelta = $idaVuelta;
+    }
+
+    //El importe del pasaje a vender no se setea al atributo de la clase, ya que sino al vender un pasaje nuevo
+    //el importe del atributo ya estaria afectado por las condiciones del viaje, y se volverían a aplicar los aumentos
+    public function venderPasaje($pasajero){
+        $coleccPasaj=$this->getPasajeros();
+        if ($this->hayPasajeDisponible()){
+            array_push($coleccPasaj,$pasajero);
+            $this->setPasajeros($coleccPasaj);
+            $importeNuevo=$this->aumentarImporte();
+        }
+        return $importeNuevo;
+    }
+
+    protected function hayPasajeDisponible(){
+        $coleccPasaj=$this->getPasajeros();
+        return count($coleccPasaj)<$this->getCantMaximaPasajeros();
+    }
+
+    //aumenta el importe en caso de ser un viaje de ida y vuelta:
+    protected function aumentarImporte(){
+        $importeNuevo=$this->getImporte();
+        if ($this->getIdaVuelta()){
+            $importeNuevo=$this->getImporte()*1.5;
+        }
+        return $importeNuevo;
     }
 }
 
