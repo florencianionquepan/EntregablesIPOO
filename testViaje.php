@@ -13,6 +13,16 @@ include "Pasajero.php";
 include "ResponsableV.php";
 include "Viaje.php";
 
+$objPasajero1=new Pasajero();
+$objPasajero1->cargar("Igor","Gatito","36192","462643");
+$objPasajero2=new Pasajero();
+$objPasajero2->cargar("Lana","Gatita","13823","462643");
+$objPasajero3=new Pasajero();
+$objPasajero3->cargar("Luna","Perrita","92425","462034");
+$objPasajero4=new pasajero();
+$objPasajero4->cargar("Mia","Pinina","11391","461087");
+$pasajeros=[$objPasajero1,$objPasajero2,$objPasajero3,$objPasajero4];
+
 $objResponsable=new ResponsableV("1540","97029","Pepe","Fredes");
 
 //$codigo,$destino,$cantMaximaPasajeros,$pasajeros,$responsableV, $importe, $idaVuelta
@@ -91,10 +101,12 @@ function solicitarDatosPersona($cont,$listaPasajeros){
     echo "Ingrese el telefono del pasajero ".($cont+1).": ";
     $telefono=trim(fgets(STDIN));
     if (!pasajeroCargado($dni,$listaPasajeros) && $cont>0){
-        $objPasajero=new Pasajero($nombre,$apellido,$dni,$telefono);
+        $objPasajero=new Pasajero();
+        $objPasajero->cargar($nombre,$apellido,$dni,$telefono);
         return $objPasajero;
     }elseif($cont==0){
-        $objPasajero=new Pasajero($nombre,$apellido,$dni,$telefono);
+        $objPasajero=new Pasajero();
+        $objPasajero->cargar($nombre,$apellido,$dni,$telefono);
         return $objPasajero;
     }elseif(pasajeroCargado($dni,$listaPasajeros)){
         echo "El dni ingresado pertenece a un pasajero ya ingresado, por favor ingrese un pasajero distinto\n";
@@ -184,15 +196,19 @@ function ingresarDatos($obj){
         switch($eleccion){
             case 1: echo "Ingrese el nombre correcto: ";
                     $nuevoNombre=trim(fgets(STDIN));
-                    $obj->modificarPasajero($ind,$nuevoNombre,$pasajero->getApellido(),$pasajero->getDni(),$pasajero->getTelefono());
+                    //ACA DEBERIA LLAMAR AL OBJETO PASAJERO YA QUE ESTA FUNCION DEBERIA ESTAR ALLI, YA LA PUSE EN ESE OBJETO:
+                    $pasajeroModif=$pasajero->modificarPasajero($ind,$nuevoNombre,$pasajero->getApellido(),$pasajero->getDni(),$pasajero->getTelefono());
+                    $obj->setearPasajeroModificado($pasajeroModif,$ind);
                     break;
             case 2:echo "Ingrese el Apellido correcto: ";
                     $nuevoApellido=trim(fgets(STDIN));
-                    $obj->modificarPasajero($ind,$pasajero->getNombre(), $nuevoApellido,$pasajero->getDni(),$pasajero->getTelefono());
+                    $pasajeroModif=$pasajero->modificarPasajero($ind,$pasajero->getNombre(), $nuevoApellido,$pasajero->getDni(),$pasajero->getTelefono());
+                    $obj->setearPasajeroModificado($pasajeroModif,$ind);
                     break;
             case 3:echo "Ingrese el telefono correcto: ";
                     $nuevoTel=trim(fgets(STDIN));
-                    $obj->modificarPasajero($ind,$pasajero->getNombre(),$pasajero->getApellido(),$pasajero->getDni(),$nuevoTel);
+                    $pasajeroModif=$pasajero->modificarPasajero($ind,$pasajero->getNombre(),$pasajero->getApellido(),$pasajero->getDni(),$nuevoTel);
+                    $obj->setearPasajeroModificado($pasajeroModif,$ind);
                     break;
         }
     }
