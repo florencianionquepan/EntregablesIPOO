@@ -136,6 +136,15 @@ class Viaje{
         }
         return $importeNuevo;
     }
+
+ */
+
+    //setea un pasajero modificado a su coleccion de pasajeros:
+    function setearPasajeroModificado($objModificar, $ind){
+        $arrayPasajeros=$this->getPasajeros();
+        $arrayPasajeros[$ind]=$objModificar;
+        $this->setPasajeros($arrayPasajeros);
+    }
 }
 
 ?>
