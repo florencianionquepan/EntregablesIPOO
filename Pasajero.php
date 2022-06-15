@@ -10,12 +10,20 @@ class Pasajero{
     private $apellido;
     private $dni;
     private $telefono;
+    private $mensajeoperacion;
 
-    public function __construct($nombre, $apellido, $dni,$telefono){
-        $this->nombre = $nombre;
-        $this->apellido = $apellido;
-        $this->dni = $dni;
-        $this->telefono=$telefono;
+    public function __construct(){
+        $this->nombre = "";
+        $this->apellido = "";
+        $this->dni = "";
+        $this->telefono="";
+    }
+
+    public function cargar($nombre, $apellido, $dni, $telefono){
+        $this->setNombre($nombre);
+        $this->setApellido($apellido);
+        $this->setDni($dni);
+        $this->setTelefono($telefono);
     }
     
     public function getNombre(){
