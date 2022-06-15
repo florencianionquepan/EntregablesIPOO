@@ -12,33 +12,13 @@ La clase Viaje debe hacer referencia al responsable de realizar el viaje.
 include "Pasajero.php";
 include "ResponsableV.php";
 include "Viaje.php";
-include "Aereo.php";
-include "Terrestre.php";
-
-$objPasajero1=new Pasajero("Igor","Gatito","36192","462643");
-$objPasajero2=new Pasajero("Lana","Gatita","13823","462643");
-$objPasajero3=new Pasajero("Luna","Perrita","92425","462034");
-$pasajeros=[$objPasajero1,$objPasajero2,$objPasajero3];
 
 $objResponsable=new ResponsableV("1540","97029","Pepe","Fredes");
 
 //$codigo,$destino,$cantMaximaPasajeros,$pasajeros,$responsableV, $importe, $idaVuelta
 $objViaje=new Viaje("123","Isla de los pininos",5,$pasajeros,$objResponsable,5000,true);
 
-$objPasajero4=new pasajero("Mia","Pinina","11391","461087");
 
-//$codigo,$destino,$cantMaximaPasajeros,$pasajeros,$responsableV, $importe, $idaVuelta,
-//$nroVuelo,$categoriaAsiento,$nombreAerolinea,$cantEscalas
-$objViajeAe=new Aereo("123","Isla de los pininos",5,$pasajeros,$objResponsable,5000,true,"3618","primera clase","airflow",2);
-echo $objViajeAe->venderPasaje($objPasajero4)."\n";
-echo $objViajeAe;
-
-//$codigo,$destino,$cantMaximaPasajeros,$pasajeros,$responsableV, $importe, $idaVuelta, $comodidadAsiento
-$objViajeTerrestre=new Terrestre("123","Isla de los pininos",5,$pasajeros,$objResponsable,5000,true,"cama");
-echo $objViajeTerrestre->venderPasaje($objPasajero4)."\n";
-echo $objViajeTerrestre;
-
-//menuOpciones($objViaje);
 
 //Se crea el menú de forma de utilizarlo con el objeto precargado o bien crear uno nuevo:
     function menuOpciones($objViaje){
