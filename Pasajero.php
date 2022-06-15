@@ -72,6 +72,16 @@ class Pasajero{
         $this->mensajeoperacion = $mensajeoperacion;
     }
 
+
+    public function modificarPasajero($nombre,$apellido,$dni,$tel){
+        $this->setNombre($nombre);
+        $this->setApellido($apellido);
+        $this->setDni($dni);
+        $this->setTelefono($tel);
+        return $this;
+    }
+
+
 }
 
 

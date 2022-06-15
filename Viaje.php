@@ -99,18 +99,6 @@ class Viaje{
         return $datos;
     }
 
-    public function modificarPasajero($ind,$nombre,$apellido,$dni,$tel){
-        $arrayPasajeros=$this->getPasajeros();
-        $objModificar=$arrayPasajeros[$ind];
-        $objModificar->setNombre($nombre);
-        $objModificar->setApellido($apellido);
-        $objModificar->setDni($dni);
-        $objModificar->setTelefono($tel);
-        $arrayPasajeros[$ind]=$objModificar;
-        $this->setPasajeros($arrayPasajeros);
-        return $arrayPasajeros;
-    }
-
     public function __toString(){
         return "Codigo del viaje: " .$this->getCodigo(). ". Destino: " .$this->getDestino().
         ".Limite de pasajeros: ".$this->getCantMaximaPasajeros().".Datos de Pasajeros:\n".$this->verPasajeros().
