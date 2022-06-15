@@ -63,6 +63,15 @@ class Pasajero{
                 ". DNI:".$this->getDni().". Telefono:".$this->getTelefono()."\n";
     }
 
+
+    public function getMensajeoperacion(){
+        return $this->mensajeoperacion;
+    }
+
+    public function setMensajeoperacion($mensajeoperacion){
+        $this->mensajeoperacion = $mensajeoperacion;
+    }
+
 }
 
 
