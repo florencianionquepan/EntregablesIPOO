@@ -98,7 +98,8 @@ class Pasajero{
         $base=new BaseDatos();
         $resp= false;
         $consultaInsertar="INSERT INTO pasajero(rdocumento, pnombre, papellido,  ptelefono, idviaje) 
-                VALUES (".$this->getDni().",'".$this->getNombre()."','".$this->getApellido()."','".$this->getTelefono()."','".$this->getObjViaje()."')";
+                VALUES (".$this->getDni().",'".$this->getNombre()."','".$this->getApellido()."','"
+                        .$this->getTelefono()."','".$this->getObjViaje()."')";
         
         if($base->Iniciar()){
 
@@ -136,7 +137,7 @@ class Pasajero{
         }
         return $resp;
     }
-    
+
     public function eliminar(){
         $base=new BaseDatos();
         $resp=false;
@@ -154,6 +155,37 @@ class Pasajero{
         }
         return $resp; 
     }
+
+    	/**
+	 * Recupera los datos de una persona por dni
+	 * @param int $dni
+	 * @return true en caso de encontrar los datos, false en caso contrario 
+	 */		
+    public function Buscar($dni){
+		$base=new BaseDatos();
+		$consultaPersona="Select * from pasajero where rdocumento=".$dni;
+		$resp= false;
+		if($base->Iniciar()){
+			if($base->Ejecutar($consultaPersona)){
+				if($row2=$base->Registro()){					
+				    $this->setDni($dni);
+					$this->setNombre($row2['pnombre']);
+					$this->setApellido($row2['papellido']);
+					$this->setTelefono($row2['ptelefono']);
+                    $this->setObjViaje($row2['idviaje']);
+					$resp= true;
+				}				
+			
+		 	}	else {
+		 			$this->setmensajeoperacion($base->getError());
+		 		
+			}
+		 }	else {
+		 		$this->setmensajeoperacion($base->getError());
+		 	
+		 }		
+		 return $resp;
+	}	
 }
 
 
