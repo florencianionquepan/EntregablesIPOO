@@ -199,6 +199,74 @@ class Viaje{
         $arrayPasajeros[$ind]=$objModificar;
         $this->setPasajeros($arrayPasajeros);
     }
+*/
+
+    //METODOS PARA BD
+
+    public function insertar(){
+		$base=new BaseDatos();
+		$resp= false;
+		$consultaInsertar="INSERT INTO viaje(vdestino, vcantmaxpasajeros, idempresa, 
+                            rnumeroempleado, vimporte, tipoAsiento, idayvuelta) 
+				VALUES (".$this->getDestino().",'".$this->getCantMaximaPasajeros()."','".$this-> getObjEmpresa().
+                        "','".$this->getResponsableV()."','".$this->getImporte()."','".$this->getTipoAsiento()."','".$this->getIdaVuelta()."')";
+		
+		if($base->Iniciar()){
+
+			if($base->Ejecutar($consultaInsertar)){
+
+			    $resp=  true;
+
+			}	else {
+					$this->setmensajeoperacion($base->getError());
+					
+			}
+
+		} else {
+				$this->setmensajeoperacion($base->getError());
+			
+		}
+		return $resp;
+	}
+	
+	
+	
+	public function modificar(){
+	    $resp =false; 
+	    $base=new BaseDatos();
+		$consultaModifica="UPDATE viaje SET vdestino='".$this->getDestino()."',vcantmaxpasajeros='".$this->getCantMaximaPasajeros();
+		if($base->Iniciar()){
+			if($base->Ejecutar($consultaModifica)){
+			    $resp=  true;
+			}else{
+				$this->setmensajeoperacion($base->getError());
+				
+			}
+		}else{
+				$this->setmensajeoperacion($base->getError());
+			
+		}
+		return $resp;
+	}
+	
+	public function eliminar(){
+		$base=new BaseDatos();
+		$resp=false;
+		if($base->Iniciar()){
+				$consultaBorra="DELETE FROM viaje WHERE idviaje=".$this->getCodigo();
+				if($base->Ejecutar($consultaBorra)){
+				    $resp=  true;
+				}else{
+						$this->setmensajeoperacion($base->getError());
+					
+				}
+		}else{
+				$this->setmensajeoperacion($base->getError());
+			
+		}
+		return $resp; 
+	}
+       
 }
 
 ?>
