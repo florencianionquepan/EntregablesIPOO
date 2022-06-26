@@ -10,6 +10,7 @@ class Pasajero{
     private $apellido;
     private $dni;
     private $telefono;
+    private $objViaje;
     private $mensajeoperacion;
 
     public function __construct(){
@@ -17,6 +18,7 @@ class Pasajero{
         $this->apellido = "";
         $this->dni = "";
         $this->telefono="";
+        $this->objViaje="";
     }
 
     public function cargar($nombre, $apellido, $dni, $telefono){
@@ -58,9 +60,17 @@ class Pasajero{
         $this->telefono = $telefono;
     }
 
+    public function getObjViaje(){
+        return $this->objViaje;
+    }
+
+    public function setObjViaje($objViaje){
+        $this->objViaje = $objViaje;
+    }
+
     public function __toString(){
         return "Nombre:".$this->getNombre().". Apellido:".$this->getApellido().
-                ". DNI:".$this->getDni().". Telefono:".$this->getTelefono()."\n";
+                ". DNI:".$this->getDni().". Telefono:".$this->getTelefono().$this->getObjViaje()."\n";
     }
 
 
