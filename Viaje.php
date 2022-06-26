@@ -20,13 +20,35 @@ class Viaje{
     private $cantMaximaPasajeros;
     private $pasajeros;
     private $responsableV;
+    private $objEmpresa;
+    private $importe;
+    private $tipoAsiento;
+    private $idaVuelta;
+    private $mensajeoperacion;
 
-    public function __construct($codigo,$destino,$cantMaximaPasajeros,$pasajeros,$responsableV){
-        $this->codigo=$codigo;
-        $this->destino=$destino;
-        $this->cantMaximaPasajeros=$cantMaximaPasajeros;
-        $this->pasajeros=$pasajeros;
-        $this->responsableV=$responsableV;
+    public function __construct(){
+        $this->codigo="";
+        $this->destino="";
+        $this->cantMaximaPasajeros="";
+        $this->pasajeros="";
+        $this->responsableV="";
+        $this->$objEmpresa="";
+        $this->$importe="";
+        $this->$tipoAsiento="";
+        $this->$idaVuelta="";
+    }
+
+    public function cargar($codigo,$destino,$cantMaximaPasajeros,$pasajeros,$responsableV,
+                            $objEmpresa,$importe,$tipoAsiento,$idaVuelta){
+        $this->setCodigo($codigo);
+        $this->setDestino($destino);
+        $this->setCantMaximaPasajeros($cantMaximaPasajeros);
+        $this->setPasajeros($pasajeros);
+        $this->setResponsableV($responsableV);
+        $this->setObjEmpresa($objEmpresa);
+        $this->setImporte($importe);
+        $this->setTipoAsiento($tipoAsiento);
+        $this->setIdaVuelta($idaVuelta);
     }
  
     public function getCodigo(){
@@ -61,6 +83,47 @@ class Viaje{
         $this->pasajeros = $pasajeros;
     }
 
+    public function getResponsableV(){
+        return $this->responsableV;
+    }
+
+    public function setResponsableV($responsableV){
+        $this->responsableV = $responsableV;
+    }
+
+    public function getObjEmpresa(){
+        return $this->objEmpresa;
+    }
+
+    public function setObjEmpresa($objEmpresa){
+            $this->objEmpresa = $objEmpresa;
+    }
+
+    public function getImporte(){
+            return $this->importe;
+    }
+
+    public function setImporte($importe){
+            $this->importe = $importe;
+    }
+
+    public function getTipoAsiento(){
+            return $this->tipoAsiento;
+    }
+
+    public function setTipoAsiento($tipoAsiento){
+            $this->tipoAsiento = $tipoAsiento;
+    }
+
+    public function getIdaVuelta(){
+            return $this->idaVuelta;
+    }
+
+    public function setIdaVuelta($idaVuelta){
+            $this->idaVuelta = $idaVuelta;
+    }
+
+    /*
     //Recorre la lista de Pasajeros y va mostrando la información de cada uno de ellos:
     public function verPasajeros(){
         $personas=[];
@@ -102,16 +165,7 @@ class Viaje{
     }
 
 
-    public function getResponsableV(){
-        return $this->responsableV;
-    }
-
-    public function setResponsableV($responsableV){
-        $this->responsableV = $responsableV;
-    }
-
-
-/*     //El importe del pasaje a vender no se setea al atributo de la clase, ya que sino al vender un pasaje nuevo
+     //El importe del pasaje a vender no se setea al atributo de la clase, ya que sino al vender un pasaje nuevo
     //el importe del atributo ya estaria afectado por las condiciones del viaje, y se volverían a aplicar los aumentos
     public function venderPasaje($pasajero){
         $coleccPasaj=$this->getPasajeros();
@@ -137,7 +191,7 @@ class Viaje{
         return $importeNuevo;
     }
 
- */
+ 
 
     //setea un pasajero modificado a su coleccion de pasajeros:
     function setearPasajeroModificado($objModificar, $ind){
