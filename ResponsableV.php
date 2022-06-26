@@ -19,7 +19,8 @@ class ResponsableV{
         $this->apellido = "";
     }
 
-    public function cargar($numLicencia, $nombre, $apellido){
+    public function cargar($numEmpleado,$numLicencia, $nombre, $apellido){
+		$this->setNumEmpleado($numEmpleado);
         $this->setNumLicencia($numLicencia);
         $this->setNombre($nombre);
         $this->setApellido($apellido);
