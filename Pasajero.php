@@ -90,8 +90,70 @@ class Pasajero{
         $this->setTelefono($tel);
         return $this;
     }
+/**
+ * METODOS NECESARIOS PARA COMUNICAR CON LA BD:
+ */
 
+    public function insertar(){
+        $base=new BaseDatos();
+        $resp= false;
+        $consultaInsertar="INSERT INTO pasajero(rdocumento, pnombre, papellido,  ptelefono, idviaje) 
+                VALUES (".$this->getDni().",'".$this->getNombre()."','".$this->getApellido()."','".$this->getTelefono()."','".$this->getObjViaje()."')";
+        
+        if($base->Iniciar()){
 
+            if($base->Ejecutar($consultaInsertar)){
+
+                $resp=  true;
+
+            }	else {
+                    $this->setmensajeoperacion($base->getError());
+                    
+            }
+
+        } else {
+                $this->setmensajeoperacion($base->getError());
+            
+        }
+        return $resp;
+    }
+
+    public function modificar(){
+        $resp =false; 
+        $base=new BaseDatos();
+        $consultaModifica="UPDATE pasajero SET pnombre='".$this->getNombre()."',papellido='".$this->getApellido()."'
+                        ,ptelefono='".$this->getTelefono()."' WHERE rdocumento=". $this->getDni();
+        if($base->Iniciar()){
+            if($base->Ejecutar($consultaModifica)){
+                $resp=  true;
+            }else{
+                $this->setmensajeoperacion($base->getError());
+                
+            }
+        }else{
+                $this->setmensajeoperacion($base->getError());
+            
+        }
+        return $resp;
+    }
+    
+    public function eliminar(){
+        $base=new BaseDatos();
+        $resp=false;
+        if($base->Iniciar()){
+                $consultaBorra="DELETE FROM pasajero WHERE rdocumento=".$this->getDni();
+                if($base->Ejecutar($consultaBorra)){
+                    $resp=  true;
+                }else{
+                        $this->setmensajeoperacion($base->getError());
+                    
+                }
+        }else{
+                $this->setmensajeoperacion($base->getError());
+            
+        }
+        return $resp; 
+    }
 }
 
 
