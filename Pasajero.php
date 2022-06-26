@@ -74,11 +74,11 @@ class Pasajero{
     }
 
 
-    public function getMensajeoperacion(){
+    public function getmensajeoperacion(){
         return $this->mensajeoperacion;
     }
 
-    public function setMensajeoperacion($mensajeoperacion){
+    public function setmensajeoperacion($mensajeoperacion){
         $this->mensajeoperacion = $mensajeoperacion;
     }
 
