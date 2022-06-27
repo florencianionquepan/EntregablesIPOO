@@ -8,11 +8,6 @@
  *  La clase Viaje debe hacer referencia al responsable de realizar el viaje.
  */
 
- /**
-  * La empresa de transporte desea gestionar la información correspondiente a los Viajes que pueden ser: 
-    * Terrestres o Aéreos,   guardar su importe e indicar si el viaje es de ida y vuelta.
-  */
-
 
 class Viaje{
     private $codigo;
@@ -32,18 +27,17 @@ class Viaje{
         $this->cantMaximaPasajeros="";
         $this->pasajeros="";
         $this->responsableV="";
-        $this->$objEmpresa="";
-        $this->$importe="";
-        $this->$tipoAsiento="";
-        $this->$idaVuelta="";
+        $this->objEmpresa="";
+        $this->importe="";
+        $this->tipoAsiento="";
+        $this->idaVuelta="";
     }
 
-    public function cargar($codigo,$destino,$cantMaximaPasajeros,$pasajeros,$responsableV,
+    public function cargar($codigo,$destino,$cantMaximaPasajeros,$responsableV,
                             $objEmpresa,$importe,$tipoAsiento,$idaVuelta){
         $this->setCodigo($codigo);
         $this->setDestino($destino);
         $this->setCantMaximaPasajeros($cantMaximaPasajeros);
-        $this->setPasajeros($pasajeros);
         $this->setResponsableV($responsableV);
         $this->setObjEmpresa($objEmpresa);
         $this->setImporte($importe);
@@ -123,6 +117,12 @@ class Viaje{
             $this->idaVuelta = $idaVuelta;
     }
 
+    public function __toString(){
+        return "Codigo del viaje: " .$this->getCodigo(). ". Destino: " .$this->getDestino().
+        ".Limite de pasajeros: ".$this->getCantMaximaPasajeros().".Datos de Pasajeros:\n".$this->verPasajeros().
+        "Datos del responsable de viaje: ".$this->getResponsableV();
+    }
+    
     /*
     //Recorre la lista de Pasajeros y va mostrando la información de cada uno de ellos:
     public function verPasajeros(){
@@ -158,12 +158,7 @@ class Viaje{
         return $datos;
     }
 
-    public function __toString(){
-        return "Codigo del viaje: " .$this->getCodigo(). ". Destino: " .$this->getDestino().
-        ".Limite de pasajeros: ".$this->getCantMaximaPasajeros().".Datos de Pasajeros:\n".$this->verPasajeros().
-        "Datos del responsable de viaje: ".$this->getResponsableV();
-    }
-
+   
 
      //El importe del pasaje a vender no se setea al atributo de la clase, ya que sino al vender un pasaje nuevo
     //el importe del atributo ya estaria afectado por las condiciones del viaje, y se volverían a aplicar los aumentos
@@ -203,28 +198,89 @@ class Viaje{
 
     //METODOS PARA BD
 
+		
+    public function Buscar($idviaje){
+		$base=new BaseDatos();
+		$consultaViaje="Select * from viaje where idviaje=".$idviaje;
+		$resp= false;
+		if($base->Iniciar()){
+			if($base->Ejecutar($consultaViaje)){
+				if($row2=$base->Registro()){					
+				    $this->setCodigo($idviaje);
+					$this->setDestino($row2['vdestino']);
+					$this->setCantMaximaPasajeros($row2['vcantmaxpasajeros']);
+					$this->setObjEmpresa($row2['idempresa']);
+                    $this->setResponsableV($row2['rnumeroempleado']);
+                    $this->setImporte($row2['vimporte']);
+                    $this->setTipoAsiento($row2['tipoAsiento']);
+                    $this->setIdaVuelta($row2['idayvuelta']);
+					$resp= true;
+				}
+		 	}else {
+		 		$this->setmensajeoperacion($base->getError()); 		
+			}
+		}else {
+		 	$this->setmensajeoperacion($base->getError());
+		}		
+		return $resp;
+	}	
+    
+//me devuelve el array de viajes, pero no con los objetos empresa y responsable sino con sus id:
+//como en el test no voy a tener un array de viajes, no me preocupo por modificar este metodo en esta clase:
+	public function listar($condicion=""){
+	    $arregloViaje = null;
+		$base=new BaseDatos();
+		$consultaViaje="Select * from viaje ";
+		if ($condicion!=""){
+		    $consultaViaje=$consultaViaje.' where '.$condicion;
+		}
+		$consultaViaje.=" order by idviaje ";
+		//echo $consultaViaje;
+		if($base->Iniciar()){
+			if($base->Ejecutar($consultaViaje)){				
+				$arregloViaje= array();
+				while($row2=$base->Registro()){
+					
+					$id=$row2['idviaje'];
+					$destino=$row2['vdestino'];
+                    $maxPas=$row2['vcantmaxpasajeros'];
+                    $idEmpresa=$row2['idempresa'];
+                    $numEmp=$row2['rnumeroempleado'];
+					$importe=$row2['vimporte'];
+					$tipoAsiento=$row2['tipoAsiento'];
+                    $idaVuelta=$row2['idayvuelta'];
+				
+					$viaje=new Viaje();
+					$viaje>cargar($id,$destino,$maxPas,$idEmpresa,$numEmp,$importe,$tipoAsiento, $idaVuelta);
+					array_push($arregloViaje,$viaje);
+				}
+		 	}else {
+		 		$this->setmensajeoperacion($base->getError());
+			}
+		 }else {
+		 	$this->setmensajeoperacion($base->getError());
+		 	
+		}	
+		return $arregloViaje;
+	}	
+
+
     public function insertar(){
 		$base=new BaseDatos();
 		$resp= false;
 		$consultaInsertar="INSERT INTO viaje(vdestino, vcantmaxpasajeros, idempresa, 
                             rnumeroempleado, vimporte, tipoAsiento, idayvuelta) 
-				VALUES (".$this->getDestino().",'".$this->getCantMaximaPasajeros()."','".$this-> getObjEmpresa().
-                        "','".$this->getResponsableV()."','".$this->getImporte()."','".$this->getTipoAsiento()."','".$this->getIdaVuelta()."')";
+				VALUES ('".$this->getDestino()."',".$this->getCantMaximaPasajeros().",".$this->getObjEmpresa()->getIdEmpresa().
+                        ",".$this->getResponsableV()->getNumEmpleado().",".$this->getImporte().",'".$this->getTipoAsiento()."','".$this->getIdaVuelta()."')";
 		
 		if($base->Iniciar()){
-
 			if($base->Ejecutar($consultaInsertar)){
-
 			    $resp=  true;
-
-			}	else {
-					$this->setmensajeoperacion($base->getError());
-					
+			}else {
+				$this->setmensajeoperacion($base->getError());	
 			}
-
-		} else {
-				$this->setmensajeoperacion($base->getError());
-			
+		}else{
+			$this->setmensajeoperacion($base->getError());
 		}
 		return $resp;
 	}
@@ -234,17 +290,17 @@ class Viaje{
 	public function modificar(){
 	    $resp =false; 
 	    $base=new BaseDatos();
-		$consultaModifica="UPDATE viaje SET vdestino='".$this->getDestino()."',vcantmaxpasajeros='".$this->getCantMaximaPasajeros();
+		$consultaModifica="UPDATE viaje SET vdestino='".$this->getDestino()."',vcantmaxpasajeros='".$this->getCantMaximaPasajeros().
+                            "',vimporte='".$this->getImporte()."',tipoAsiento='".$this->getTipoAsiento()."',idayvuelta='".$this->getIdaVuelta().
+                            "'WHERE idviaje=". $this->getCodigo();
 		if($base->Iniciar()){
 			if($base->Ejecutar($consultaModifica)){
 			    $resp=  true;
 			}else{
 				$this->setmensajeoperacion($base->getError());
-				
 			}
 		}else{
-				$this->setmensajeoperacion($base->getError());
-			
+			$this->setmensajeoperacion($base->getError());
 		}
 		return $resp;
 	}
@@ -257,16 +313,22 @@ class Viaje{
 				if($base->Ejecutar($consultaBorra)){
 				    $resp=  true;
 				}else{
-						$this->setmensajeoperacion($base->getError());
-					
+					$this->setmensajeoperacion($base->getError());		
 				}
 		}else{
-				$this->setmensajeoperacion($base->getError());
-			
+			$this->setmensajeoperacion($base->getError());
 		}
 		return $resp; 
 	}
        
+
+    public function getmensajeoperacion(){
+        return $this->mensajeoperacion;
+    }
+
+    public function setmensajeoperacion($mensajeoperacion){
+        $this->mensajeoperacion = $mensajeoperacion;
+    }
 }
 
 ?>
