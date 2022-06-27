@@ -4,11 +4,12 @@ class Empresa{
     private $idEmpresa;
     private $nombre;
     private $direccion;
+	private $mensajeoperacion;
 
     public function __construct(){
-        $this->$idEmpresa="";
-        $this->$nombre="";
-        $this->$direccion="";
+        $this->idEmpresa="";
+        $this->nombre="";
+        $this->direccion="";
     }
 
     public function cargar($id, $nombre, $direccion){
@@ -40,6 +41,14 @@ class Empresa{
     public function setDireccion($direccion){
         $this->direccion = $direccion;
     }
+
+	public function getmensajeoperacion(){
+		return $this->mensajeoperacion;
+	}
+
+	public function setmensajeoperacion($mensajeoperacion){
+		$this->mensajeoperacion = $mensajeoperacion;
+	}
 
     public function __toString(){
     return "idEmpresa:".$this->getIdEmpresa().". Nombre:".$this->getNombre().". Dirección:".$this->getDireccion()."\n"; 
@@ -164,6 +173,7 @@ class Empresa{
 		}
 		return $resp; 
 	}
+
 }
 
 
