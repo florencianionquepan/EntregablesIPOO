@@ -171,7 +171,7 @@ class ResponsableV{
 	public function modificar(){
 	    $resp =false; 
 	    $base=new BaseDatos();
-		$consultaModifica="UPDATE pasajero SET rnumerolicencia='".$this->getNumLicencia()."',rnombre='".$this->getNombre()."'
+		$consultaModifica="UPDATE responsable SET rnumerolicencia='".$this->getNumLicencia()."',rnombre='".$this->getNombre()."'
                            ,rapellido='".$this->getApellido()."' WHERE rnumeroempleado=". $this->getNumEmpleado();
 		if($base->Iniciar()){
 			if($base->Ejecutar($consultaModifica)){
@@ -191,7 +191,7 @@ class ResponsableV{
 		$base=new BaseDatos();
 		$resp=false;
 		if($base->Iniciar()){
-				$consultaBorra="DELETE FROM pasajero WHERE rnumeroempleado=".$this->getNumEmpleado();
+				$consultaBorra="DELETE FROM responsable WHERE rnumeroempleado=".$this->getNumEmpleado();
 				if($base->Ejecutar($consultaBorra)){
 				    $resp=  true;
 				}else{
