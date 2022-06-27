@@ -117,14 +117,14 @@ class Viaje{
             $this->idaVuelta = $idaVuelta;
     }
 
-    public function __toString(){
-        return "Codigo del viaje: " .$this->getCodigo(). ". Destino: " .$this->getDestino().
-        ".Limite de pasajeros: ".$this->getCantMaximaPasajeros().".Datos de Pasajeros:\n".$this->verPasajeros().
-        "Datos del responsable de viaje: ".$this->getResponsableV();
+    public function getmensajeoperacion(){
+        return $this->mensajeoperacion;
     }
-    
-    /*
-    //Recorre la lista de Pasajeros y va mostrando la información de cada uno de ellos:
+
+    public function setmensajeoperacion($mensajeoperacion){
+        $this->mensajeoperacion = $mensajeoperacion;
+    }
+ //Recorre la lista de Pasajeros y va mostrando la información de cada uno de ellos:
     public function verPasajeros(){
         $personas=[];
         $personas=$this->getPasajeros();
@@ -135,6 +135,15 @@ class Viaje{
         return $infoPersonas;
     }
 
+    public function __toString(){
+        return "Codigo del viaje: " .$this->getCodigo(). ". Destino: " .$this->getDestino().
+        ".Limite de pasajeros: ".$this->getCantMaximaPasajeros().".Datos de Pasajeros:\n".$this->verPasajeros().
+        "Datos del responsable de viaje: ".$this->getResponsableV().". Empresa:".$this->getObjEmpresa(). 
+        ". Importe del viaje:".$this->getImporte().". Tipo de asiento:".$this->getTipoAsiento().
+        ". Ida y vuelta:".$this->getIdaVuelta()."\n";
+    }
+    
+    /*
 
     //Me retorna el pasajero encontrado por dni, y el indice en el que se encuentra en el array:
     public function buscarPasajero($parametro){
@@ -158,7 +167,12 @@ class Viaje{
         return $datos;
     }
 
-   
+    //setea un pasajero modificado a su coleccion de pasajeros:
+    function setearPasajeroModificado($objModificar, $ind){
+        $arrayPasajeros=$this->getPasajeros();
+        $arrayPasajeros[$ind]=$objModificar;
+        $this->setPasajeros($arrayPasajeros);
+    }
 
      //El importe del pasaje a vender no se setea al atributo de la clase, ya que sino al vender un pasaje nuevo
     //el importe del atributo ya estaria afectado por las condiciones del viaje, y se volverían a aplicar los aumentos
@@ -186,14 +200,6 @@ class Viaje{
         return $importeNuevo;
     }
 
- 
-
-    //setea un pasajero modificado a su coleccion de pasajeros:
-    function setearPasajeroModificado($objModificar, $ind){
-        $arrayPasajeros=$this->getPasajeros();
-        $arrayPasajeros[$ind]=$objModificar;
-        $this->setPasajeros($arrayPasajeros);
-    }
 */
 
     //METODOS PARA BD
@@ -320,15 +326,7 @@ class Viaje{
 		}
 		return $resp; 
 	}
-       
-
-    public function getmensajeoperacion(){
-        return $this->mensajeoperacion;
-    }
-
-    public function setmensajeoperacion($mensajeoperacion){
-        $this->mensajeoperacion = $mensajeoperacion;
-    }
+    
 }
 
 ?>
