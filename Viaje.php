@@ -25,7 +25,7 @@ class Viaje{
         $this->codigo="";
         $this->destino="";
         $this->cantMaximaPasajeros="";
-        $this->pasajeros="";
+        $this->pasajeros=[];
         $this->responsableV="";
         $this->objEmpresa="";
         $this->importe="";
@@ -124,7 +124,8 @@ class Viaje{
     public function setmensajeoperacion($mensajeoperacion){
         $this->mensajeoperacion = $mensajeoperacion;
     }
- //Recorre la lista de Pasajeros y va mostrando la información de cada uno de ellos:
+ 
+    //Recorre la lista de Pasajeros y va mostrando la información de cada uno de ellos:
     public function verPasajeros(){
         $personas=[];
         $personas=$this->getPasajeros();
@@ -215,8 +216,14 @@ class Viaje{
 				    $this->setCodigo($idviaje);
 					$this->setDestino($row2['vdestino']);
 					$this->setCantMaximaPasajeros($row2['vcantmaxpasajeros']);
-					$this->setObjEmpresa($row2['idempresa']);
-                    $this->setResponsableV($row2['rnumeroempleado']);
+                    $idEmpresa=$row2['idempresa'];
+                    $objEmpresa=new Empresa();
+                    $objEmpresa->Buscar($idEmpresa);
+				    $this->setObjEmpresa($objEmpresa);
+                    $numEmpleado=$row2['rnumeroempleado'];
+                    $objResponsableV=new ResponsableV();
+                    $objResponsableV->Buscar($numEmpleado);
+                    $this->setResponsableV($objResponsableV);
                     $this->setImporte($row2['vimporte']);
                     $this->setTipoAsiento($row2['tipoAsiento']);
                     $this->setIdaVuelta($row2['idayvuelta']);
@@ -232,7 +239,7 @@ class Viaje{
 	}	
     
 //me devuelve el array de viajes, pero no con los objetos empresa y responsable sino con sus id:
-//como en el test no voy a tener un array de viajes, no me preocupo por modificar este metodo en esta clase:
+//como en el test no voy a tener un array de viajes, no me preocupo por modificar este metodo en esta clase POR AHORA
 	public function listar($condicion=""){
 	    $arregloViaje = null;
 		$base=new BaseDatos();
