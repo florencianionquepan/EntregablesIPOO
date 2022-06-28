@@ -92,30 +92,93 @@ function menuOpciones($idViaje){
                 case 3:mostrarViaje($idViaje);break;
                 case 4: echo "Usted ha salido del menú de opciones";break;
                 default: echo "elección ingresada no valida, por favor ingrese otra\n";break;
-                }
-        }while($eleccion!=4);
-    }
+            }
+    }while($eleccion!=4);
+}
 
-
-//Solicita todos los valores de los atributos de la nueva instancia de la clase Viaje:
-function cargarViaje(){
-    echo "Ingrese codigo del viaje: ";
-    $cod = trim(fgets(STDIN));
-    echo "Ingrese destino del viaje: ";
-    $destino = trim(fgets(STDIN));
-    echo "Ingrese la capacidad máxima de pasajeros: ";
-    $capMaxima=trim(fgets(STDIN));
-    $listaPasajeros=cargarDatos($capMaxima);
-    echo "Ingrese los datos del responsable del viaje: ";
-    $objResponsable=cargarResponsable();
-    $objViaje=new Viaje($cod,$destino,$capMaxima,$listaPasajeros,$objResponsable);
+function mostrarViaje($id){
+    $objViaje=setearPasajeros($id);
     echo $objViaje;
+}
+
+//Esta funcion busca todos los pasajeros con el idViaje que le paso por parámetro, los setea a ese objViaje
+//Y me retorna el viaje con la coleccion de pasajeros
+function setearPasajeros($id){
+    $objPasajero=new Pasajero();
+    $coleccPasajeros=$objPasajero->listar("idviaje=".$id);
+    //AHORA A ESE VIAJE LE SETEO LA COLECCION PARA PODER MOSTRARLO
+    $objViaje=new Viaje();
+    $objViaje->Buscar($id);
+    //ACA PODRIA CONTROLAR QUE EL id EXISTA
+    $objViaje->setPasajeros($coleccPasajeros);
     return $objViaje;
 }
 
+/**
+ * FUNCIONES QUE PERMITEN CREAR UN VIAJE 
+ */
+
+//Solicita todos los valores de los atributos de la nueva instancia de la clase Viaje:
+function cargarViaje(){
+    echo "Ingrese destino del viaje: ";
+    $destino = trim(fgets(STDIN));
+    echo "Ingrese la capacidad máxima de pasajeros: ";
+    $capMaxima=intval(trim(fgets(STDIN)));
+
+    echo "Escoja alguna empresa de viaje:\n";
+    verEmpresas();
+    $objEmpresa=ingresarEmpresa();
+
+    echo "Ingrese los datos del responsable del viaje: ";
+    $objResponsable=cargarResponsable();
+
+    echo "Ingrese importe del viaje: ";
+    $importe = intval(trim(fgets(STDIN)));
+    echo "Ingrese tipo de asiento del viaje: ";
+    $tipo = trim(fgets(STDIN));
+    echo "Ingrese si es ida y vuelta (SI/NO): ";
+    $idaVuelta=trim(fgets(STDIN));
+
+    //$destino,$cantMaximaPasajeros,$responsableV,$objEmpresa,$importe,$tipoAsiento,$idaVuelta
+    $objViaje=new Viaje();
+    $objViaje->cargar($destino,$capMaxima,$objResponsable,$objEmpresa,$importe,$tipo,$idaVuelta);
+    $resultadoViajeCreado=$objViaje->insertar();
+    echo $resultadoViajeCreado?"Viaje creado ok, ahora es momento de los pasajeros: \n":$objViaje->getmensajeoperacion();
+    $idViaje=$objViaje->obtenerUltimoId();
+    $objViaje->Buscar($idViaje);
+    if($resultadoViajeCreado){
+        cargarDatos($capMaxima,$objViaje);
+        setearPasajeros($objViaje);
+    }
+    echo $objViaje;
+    return $idViaje;
+}
+
+function verEmpresas(){
+    $empresa=new Empresa;
+    $colecc=$empresa->listar();
+    $msn="";
+    for ($i=0;$i<count($colecc);$i++){
+        $msn=$msn.$colecc[$i]; 
+    }
+    echo $msn;
+}
+
+function ingresarEmpresa(){
+    echo "Ingrese codigo de empresa: ";
+    $codE=trim(fgets(STDIN));
+    $objEmpresa=new Empresa();
+    $existe=$objEmpresa->Buscar($codE);
+    while(!$existe){
+        echo "Por favor, escoja un codigo de empresa válido: ";
+        $codE=trim(fgets(STDIN));
+        $objEmpresa=new Empresa();
+        $existe=$objEmpresa->Buscar($codE);
+    }
+    return $objEmpresa;
+}
 //Se cargan los datos de los pasajeros en el caso de estar creando un nuevo objeto de clase Viaje:
-function cargarDatos($capMaxima){
-    $listaPasajeros=[];
+function cargarDatos($capMaxima,$objViaje){
     $cont=-1;
     do{
         $cont+=1;
@@ -123,17 +186,16 @@ function cargarDatos($capMaxima){
             echo "Ha llegado al número de pasajeros máximo permitido \n";
             $resp="no";
         }else{
-            $listaPasajeros[$cont]=solicitarDatosPersona($cont,$listaPasajeros);
+            solicitarDatosPersona($cont,$objViaje);
             echo "Desea sumar otro pasajero? (si/no): ";
             $resp=trim(fgets(STDIN));
         }
     }
     while ($resp=="si");
-    return $listaPasajeros;
 }
 
 //Se solicitan los datos de un solo pasajero:
-function solicitarDatosPersona($cont,$listaPasajeros){
+function solicitarDatosPersona($cont,$objViaje){
     echo "Ingrese el nombre del pasajero ".($cont+1).": ";
     $nombre=trim(fgets(STDIN));
     echo "Ingrese el apellido del pasajero ".($cont+1).": ";
@@ -142,25 +204,32 @@ function solicitarDatosPersona($cont,$listaPasajeros){
     $dni=trim(fgets(STDIN));
     echo "Ingrese el telefono del pasajero ".($cont+1).": ";
     $telefono=trim(fgets(STDIN));
-    if (!pasajeroCargado($dni,$listaPasajeros) && $cont>0){
+    //le tengo que pasar el objero viaje del codigo que cree:
+    if (!pasajeroCargado($dni)){
         $objPasajero=new Pasajero();
-        $objPasajero->cargar($nombre,$apellido,$dni,$telefono);
+        $objPasajero->cargar($nombre,$apellido,$dni,$telefono,$objViaje);
+        $resultadoPasajero=$objPasajero->insertar();
+        echo $resultadoPasajero?"Pasajero cargado ok\n":$objPasajero->getmensajeoperacion();
         return $objPasajero;
-    }elseif($cont==0){
-        $objPasajero=new Pasajero();
-        $objPasajero->cargar($nombre,$apellido,$dni,$telefono);
-        return $objPasajero;
-    }elseif(pasajeroCargado($dni,$listaPasajeros)){
+    }elseif(pasajeroCargado($dni)){
         echo "El dni ingresado pertenece a un pasajero ya ingresado, por favor ingrese un pasajero distinto\n";
+        solicitarDatosPersona($cont,$objViaje);
     }
 }
 
-function pasajeroCargado($dni,$listaPasajeros){
-    //se hace un recorrido parcial de la lista de pasajeros cargada hasta el momento:
+function pasajeroCargado($dni){
+    //se recorre la lista en la BD:
+    $pasajero=new Pasajero();
+    $existe=$pasajero->Buscar($dni);
+    return $existe;
+
+    /* //se hace un recorrido parcial de la lista de pasajeros cargada hasta el momento:
     // si encuentra un obj. con el dni, corta el recorrido y devuelve true
     //sino devuelve false;
     $result=false;
     $j=0;
+    $objPasajero=new Pasajero();
+    $objPasajero->listar();
     while ($result==false && $j<count($listaPasajeros)){
         if ($listaPasajeros[$j]->getDni()==$dni){
             $result=true;
@@ -168,48 +237,74 @@ function pasajeroCargado($dni,$listaPasajeros){
             $j++;
         }
     }
-    return $result;
-}
+    return $result; */
+} 
 
 function cargarResponsable(){
-    echo "Ingrese numero del empleado: ";
-    $num=trim(fgets(STDIN));
     echo "Ingrese licencia: ";
     $licencia=trim(fgets(STDIN));
     echo "Ingrese nombre: ";
     $nombre=trim(fgets(STDIN));
     echo "Ingrese apellido: ";
     $apellido=trim(fgets(STDIN));
-    $objResp=new ResponsableV($num,$licencia,$nombre,$apellido);
+    $objResp=new ResponsableV();
+    $objResp->cargar($licencia,$nombre,$apellido);
+    $resultadoRespo=$objResp->insertar();
+    echo $resultadoRespo?"Responsable cargado ok \n":$resultadoRespo->getmensajeoperacion();
+    $objResp->BuscarPorLic($licencia);
     return $objResp;
 }
 
-function modificarViaje($obj){
-    echo "Desea modificar codigo y destino y cantidad maxima?(si/no): ";
+
+/**
+ * FUNCIONES QUE PERMITEN MODIFICAR UN VIAJE EXISTENTE. AHORA EL PARAMETRO ES id. ACTUALIZAR.
+ */
+function modificarViaje($id){
+    echo "Desea modificar destino, cantidad maxima, importe, tipo de asiento, y si es ida y vuelta?(si/no): ";
     $modifViaje=trim(fgets(STDIN));
     if ($modifViaje=="si"){
-        modificarDatosViaje($obj);
+        modificarDatosViaje($id);
     }
     echo "Desea modificar los datos de algun pasajero?(si/no): ";
     $modifPasajeros=trim(fgets(STDIN));
     if ($modifPasajeros=="si"){
-        ingresarDatos($obj);
-    }
+        ingresarDatos($id);
+    } 
 }
 
-function modificarDatosViaje($obj){
-    echo "Ingrese el nuevo código del viaje: ";
-    $codNuevo=trim(fgets(STDIN));
-    $obj->setCodigo($codNuevo);
+function modificarDatosViaje($id){
+    //Primero traemos al objeto que vamos a modificar:
+    $obj=new Viaje();
+    $obj->Buscar($id);
+    //Luego pedimos los datos, los seteamos en php, al final modificamos en la bd:
     echo "Ingrese el nuevo destino: ";
     $destNuevo=trim(fgets(STDIN));
     $obj->setDestino($destNuevo);
-    $cantMaximaPasajeros=solicitarCapMaxima($obj);
+
+    $cantMaximaPasajeros=solicitarCapMaxima($id);
     $obj->setCantMaximaPasajeros($cantMaximaPasajeros);
+
+    echo "Ingrese el nuevo importe: ";
+    $impNuevo=trim(fgets(STDIN));
+    $obj->setImporte($impNuevo);
+
+    echo "Ingrese el tipo de asiento(cama/semicama): ";
+    $tipoAs=trim(fgets(STDIN));
+    $obj->setTipoAsiento($tipoAs);
+
+    echo "Ingrese si es ida y vuelta:(SI/NO): ";
+    $IV=trim(fgets(STDIN));
+    $obj->setIdaVuelta($IV);
+
+    $viajeModificado=$obj->modificar();
+    echo $viajeModificado?"Viaje modificado ok\n":$obj->getmensajeoperacion();
 }
 
-function solicitarCapMaxima($obj){
-    $cantPasajeros=count($obj->getPasajeros());
+function solicitarCapMaxima($id){
+    $objPasajero=new Pasajero();
+    $coleccPasajeros=$objPasajero->listar("idviaje=".$id);
+    $cantPasajeros=count($coleccPasajeros);
+    echo $cantPasajeros;
     echo "Ingrese la capacidad máxima de pasajeros: ";
     $nuevaCapMaxima=trim(fgets(STDIN));
     while ($nuevaCapMaxima<$cantPasajeros){
@@ -219,43 +314,41 @@ function solicitarCapMaxima($obj){
     return $nuevaCapMaxima;
 }
 
-function ingresarDatos($obj){
+function ingresarDatos($id){
+    $objViaje=setearPasajeros($id);
     echo "Ingrese el dni de la persona a modificar: ";
     $dni=trim(fgets(STDIN));
-    $datos=$obj->buscarPasajero($dni);
+    $datos=$objViaje->buscarPasajero($dni);
     if ($datos=="error"){
-        echo "No existe un pasajero con ese dato";
+        echo "No existe un pasajero con ese dato, desea volver a buscar con otro dni? (si/no): ";
+        $resp=trim(fgets(STDIN));
+        if($resp=='si'){
+            ingresarDatos($id);
+        }
     }else{
         $pasajero=$datos[0];
         $ind=$datos[1];
-        echo "Que dato desea modificar? Ingrese 1,2 o 3: \n"
-                    ."1) Nombre.\n"
-                    ."2) Apellido.\n"
-                    ."3) Telefono.\n";
-                    
-        $eleccion = trim(fgets(STDIN));            
-        
-        switch($eleccion){
-            case 1: echo "Ingrese el nombre correcto: ";
-                    $nuevoNombre=trim(fgets(STDIN));
-                    //ACA DEBERIA LLAMAR AL OBJETO PASAJERO YA QUE ESTA FUNCION DEBERIA ESTAR ALLI, YA LA PUSE EN ESE OBJETO:
-                    $pasajeroModif=$pasajero->modificarPasajero($ind,$nuevoNombre,$pasajero->getApellido(),$pasajero->getDni(),$pasajero->getTelefono());
-                    $obj->setearPasajeroModificado($pasajeroModif,$ind);
-                    break;
-            case 2:echo "Ingrese el Apellido correcto: ";
-                    $nuevoApellido=trim(fgets(STDIN));
-                    $pasajeroModif=$pasajero->modificarPasajero($ind,$pasajero->getNombre(), $nuevoApellido,$pasajero->getDni(),$pasajero->getTelefono());
-                    $obj->setearPasajeroModificado($pasajeroModif,$ind);
-                    break;
-            case 3:echo "Ingrese el telefono correcto: ";
-                    $nuevoTel=trim(fgets(STDIN));
-                    $pasajeroModif=$pasajero->modificarPasajero($ind,$pasajero->getNombre(),$pasajero->getApellido(),$pasajero->getDni(),$nuevoTel);
-                    $obj->setearPasajeroModificado($pasajeroModif,$ind);
-                    break;
-        }
+        //traer ese pasajero de la BD:
+        $resPasajero=$pasajero->Buscar($dni);
+        echo $resPasajero?"Pasajero encontrado en BD OK \n":$pasajero->getmensajeoperacion();
+        echo "Pasajero a modificar: ".$pasajero;
+
+        echo "Ingrese el nombre correcto: ";
+        $nuevoNombre=trim(fgets(STDIN));
+        echo "Ingrese el Apellido correcto: ";
+        $nuevoApellido=trim(fgets(STDIN));
+
+        echo "Ingrese el telefono correcto: ";
+        $nuevoTel=trim(fgets(STDIN));
+
+        $pasajeroModif=$pasajero->modificarPasajero($nuevoNombre,$nuevoApellido,$pasajero->getDni(),$nuevoTel);
+        $resPasajeroModif=$pasajero->modificar();
+        echo $resPasajeroModif?"Pasajero modificado ok\n":$pasajero->getmensajeoperacion();
+
     }
     
 }
+ 
 
 
 
