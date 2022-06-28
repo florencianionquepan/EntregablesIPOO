@@ -12,8 +12,7 @@ class Empresa{
         $this->direccion="";
     }
 
-    public function cargar($id, $nombre, $direccion){
-        $this->setIdEmpresa($id);
+    public function cargar($nombre, $direccion){
         $this->setNombre($nombre);
         $this->setDireccion($direccion);
     }
@@ -69,17 +68,15 @@ class Empresa{
 					$this->setDireccion($row2['edireccion']);
 					$resp= true;
 				}				
-			
 		 	}else{
-		 			$this->setmensajeoperacion($base->getError());
-		 		
-			}
-		 }else{
 		 		$this->setmensajeoperacion($base->getError());
-		 }		
-		 return $resp;
+			}
+		}else{
+		 	$this->setmensajeoperacion($base->getError());
+		}		
+		return $resp;
 	}	
-    
+
 
 	public function listar($condicion=""){
 	    $arregloEmpresa = null;
@@ -100,21 +97,18 @@ class Empresa{
 					$direccion=$row2['edireccion'];
 				
 					$empresa=new Empresa();
-					$empresa->cargar($id,$nombre,$direccion);
+					$empresa->cargar($nombre,$direccion);
 					array_push($arregloEmpresa,$empresa);
-	
 				}
-				
-			
-		 	}	else {
-		 			$this->setmensajeoperacion($base->getError());
+		 	}else {
+		 		$this->setmensajeoperacion($base->getError());
 		 		
 			}
-		 }	else {
-		 		$this->setmensajeoperacion($base->getError());
+		}else {
+		 	$this->setmensajeoperacion($base->getError());
 		 	
-		 }	
-		 return $arregloPersona;
+		}	
+		return $arregloEmpresa;
 	}	
 
 
@@ -122,8 +116,8 @@ class Empresa{
 	public function insertar(){
 		$base=new BaseDatos();
 		$resp= false;
-		$consultaInsertar="INSERT INTO empresa(idempresa, enombre,  edireccion) 
-				VALUES (".$this->getIdEmpresa().",'".$this->getNombre()."','".$this->getDireccion()."')";
+		$consultaInsertar="INSERT INTO empresa(enombre,  edireccion) 
+				VALUES ('".$this->getNombre()."','".$this->getDireccion()."')";
 		
 		if($base->Iniciar()){
 
