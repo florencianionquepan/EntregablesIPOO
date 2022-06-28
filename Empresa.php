@@ -50,7 +50,7 @@ class Empresa{
 	}
 
     public function __toString(){
-    return "idEmpresa:".$this->getIdEmpresa().". Nombre:".$this->getNombre().". Dirección:".$this->getDireccion()."\n"; 
+    return "id:".$this->getIdEmpresa().". Nombre:".$this->getNombre().". Dirección:".$this->getDireccion()."\n"; 
     }
 
     /**
