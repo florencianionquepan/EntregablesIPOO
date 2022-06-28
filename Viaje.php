@@ -277,6 +277,23 @@ class Viaje{
 		return $arregloViaje;
 	}	
 
+    //Retorna el ultimo id generado:
+    public function obtenerUltimoId(){
+        $base=new BaseDatos();
+		$consultaViaje="Select MAX(idviaje) from viaje";
+        if($base->Iniciar()){
+			if($base->Ejecutar($consultaViaje)){	
+                if($row2=$base->Registro()){
+                    $resp=$row2['MAX(idviaje)'];
+                }
+		 	}else {
+		 		$this->setmensajeoperacion($base->getError());
+			}
+		 }else {
+		 	$this->setmensajeoperacion($base->getError());
+		}
+        return $resp;
+    }
 
     public function insertar(){
 		$base=new BaseDatos();
