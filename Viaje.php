@@ -145,36 +145,40 @@ class Viaje{
         ". Ida y vuelta:".$this->getIdaVuelta()."\n";
     }
     
-    /*
+    
 
     //Me retorna el pasajero encontrado por dni, y el indice en el que se encuentra en el array:
-    public function buscarPasajero($parametro){
+    public function buscarPasajero($dni){
         $arrayPasajeros=$this->getPasajeros();
         $i=0;
         $encontrado=false;
-        while ($i<count($arrayPasajeros) && !$encontrado){
+        $total=count($arrayPasajeros);
+        while ($i<$total && !$encontrado){
             $dniPasajero=$arrayPasajeros[$i]->getDni();
-            //el parametro es el dni:
-            if ($dniPasajero==$parametro){
+
+            if ($dniPasajero==$dni){
                 $encontrado=true;
                 $pasajero=$arrayPasajeros[$i];
                 $indice=$i;
                 $datos=[$pasajero,$indice];
             }
             $i++;
+
         }
-        if ($i>count($arrayPasajeros)){
-            return "error";
+        if ($i==$total && !$encontrado){
+            $datos="error";
         }
         return $datos;
     }
 
+    /*
     //setea un pasajero modificado a su coleccion de pasajeros:
     function setearPasajeroModificado($objModificar, $ind){
         $arrayPasajeros=$this->getPasajeros();
         $arrayPasajeros[$ind]=$objModificar;
         $this->setPasajeros($arrayPasajeros);
     }
+
 
      //El importe del pasaje a vender no se setea al atributo de la clase, ya que sino al vender un pasaje nuevo
     //el importe del atributo ya estaria afectado por las condiciones del viaje, y se volverían a aplicar los aumentos
