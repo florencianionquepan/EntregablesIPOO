@@ -19,8 +19,7 @@ class ResponsableV{
         $this->apellido = "";
     }
 
-    public function cargar($numEmpleado,$numLicencia, $nombre, $apellido){
-		$this->setNumEmpleado($numEmpleado);
+    public function cargar($numLicencia, $nombre, $apellido){
         $this->setNumLicencia($numLicencia);
         $this->setNombre($nombre);
         $this->setApellido($apellido);
@@ -90,17 +89,38 @@ class ResponsableV{
 					$resp= true;
 				}				
 			
-		 	}	else {
-		 			$this->setmensajeoperacion($base->getError());
+		 	}else {
+		 		$this->setmensajeoperacion($base->getError());
 		 		
 			}
-		 }	else {
-		 		$this->setmensajeoperacion($base->getError());
+		}else {
+		 	$this->setmensajeoperacion($base->getError());
 		 	
-		 }		
-		 return $resp;
+		}		
+		return $resp;
 	}	
     
+	public function BuscarPorLic($lic){
+		$base=new BaseDatos();
+		$consultaPersona="Select * from responsable where rnumerolicencia=".$lic;
+		$resp= false;
+		if($base->Iniciar()){
+			if($base->Ejecutar($consultaPersona)){
+				if($row2=$base->Registro()){					
+				    $this->setNumEmpleado($row2['rnumeroempleado']);
+					$this->setNombre($row2['rnombre']);
+					$this->setApellido($row2['rapellido']);
+					$this->setNumLicencia($lic);
+					$resp= true;
+				}				
+		 	}else {
+		 		$this->setmensajeoperacion($base->getError());
+			}
+		}else {
+		 	$this->setmensajeoperacion($base->getError());
+		}		
+		return $resp;
+	}	
 
 	public function listar($condicion=""){
 	    $arregloPersona = null;
