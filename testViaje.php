@@ -73,23 +73,23 @@ $resultadoP4=$objPasajero4->insertar();
 menuOpciones($ultimoViaje);
 
 //Se crea el menú de forma de utilizarlo con el objeto precargado o bien crear uno nuevo:
-    function menuOpciones($objViaje){
-        do{
-            echo "------Menú de opciones------\n"
-                ."1) Cargar información de un viaje.\n"
-                ."2) Modificar Viaje.\n"
-                ."3) Mostrar Viaje.\n"
-                ."4) Salir.\n";
+function menuOpciones($idViaje){
+    do{
+        echo "------Menú de opciones------\n"
+            ."1) Cargar información de un viaje.\n"
+            ."2) Modificar Viaje.\n"
+            ."3) Mostrar Viaje.\n"
+            ."4) Salir.\n";
                 
             echo "Ingrese su eleccion: ";
             $eleccion = trim(fgets(STDIN));            
     
             switch($eleccion){
                 //En el caso1, se tendra la opción de cargar un viaje nuevo y sobreescribir al precargado:
-                case 1:$objViaje=cargarViaje();break;
+                case 1:$idViaje=cargarViaje();break;
                 //Estas dos opciones pueden ejecutarse tanto con el viaje precargado como con uno nuevo que cree el usuario:
-                case 2:modificarViaje($objViaje);break;
-                case 3:echo $objViaje;break;
+                case 2:modificarViaje($idViaje);break;
+                case 3:mostrarViaje($idViaje);break;
                 case 4: echo "Usted ha salido del menú de opciones";break;
                 default: echo "elección ingresada no valida, por favor ingrese otra\n";break;
                 }
