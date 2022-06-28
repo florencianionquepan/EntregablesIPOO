@@ -198,7 +198,7 @@ class Pasajero{
                     $objViaje->Buscar($idViaje);
 
 					$pasajero=new Pasajero();
-					$pasajero->cargar($dni,$nombre,$apellido,$telefono,$objViaje);
+					$pasajero->cargar($nombre,$apellido,$dni,$telefono,$objViaje);
 					array_push($arregloPersona,$pasajero);
 				}
 		 	}else{
