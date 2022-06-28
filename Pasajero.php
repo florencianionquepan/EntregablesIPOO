@@ -71,7 +71,7 @@ class Pasajero{
 
     public function __toString(){
         return "Nombre:".$this->getNombre().". Apellido:".$this->getApellido().
-                ". DNI:".$this->getDni().". Telefono:".$this->getTelefono().$this->getObjViaje()."\n";
+                ". DNI:".$this->getDni().". Telefono:".$this->getTelefono()."\n";
     }
 
 
@@ -193,7 +193,7 @@ class Pasajero{
 					$nombre=$row2['pnombre'];
 					$apellido=$row2['papellido'];
 					$telefono=$row2['ptelefono'];
-                    $idviaje=$row2['idviaje'];
+                    $idViaje=$row2['idviaje'];
                     $objViaje=new Viaje();
                     $objViaje->Buscar($idViaje);
 
