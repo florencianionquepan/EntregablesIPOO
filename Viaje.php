@@ -33,9 +33,8 @@ class Viaje{
         $this->idaVuelta="";
     }
 
-    public function cargar($codigo,$destino,$cantMaximaPasajeros,$responsableV,
+    public function cargar($destino,$cantMaximaPasajeros,$responsableV,
                             $objEmpresa,$importe,$tipoAsiento,$idaVuelta){
-        $this->setCodigo($codigo);
         $this->setDestino($destino);
         $this->setCantMaximaPasajeros($cantMaximaPasajeros);
         $this->setResponsableV($responsableV);
@@ -125,6 +124,8 @@ class Viaje{
         $this->mensajeoperacion = $mensajeoperacion;
     }
  
+
+    
     //Recorre la lista de Pasajeros y va mostrando la información de cada uno de ellos:
     public function verPasajeros(){
         $personas=[];
@@ -139,8 +140,8 @@ class Viaje{
     public function __toString(){
         return "Codigo del viaje: " .$this->getCodigo(). ". Destino: " .$this->getDestino().
         ".Limite de pasajeros: ".$this->getCantMaximaPasajeros().".Datos de Pasajeros:\n".$this->verPasajeros().
-        "Datos del responsable de viaje: ".$this->getResponsableV().". Empresa:".$this->getObjEmpresa(). 
-        ". Importe del viaje:".$this->getImporte().". Tipo de asiento:".$this->getTipoAsiento().
+        "Datos del responsable de viaje: ".$this->getResponsableV()."Empresa:".$this->getObjEmpresa(). 
+        "Importe del viaje:".$this->getImporte().". Tipo de asiento:".$this->getTipoAsiento().
         ". Ida y vuelta:".$this->getIdaVuelta()."\n";
     }
     
@@ -264,7 +265,7 @@ class Viaje{
                     $idaVuelta=$row2['idayvuelta'];
 				
 					$viaje=new Viaje();
-					$viaje>cargar($id,$destino,$maxPas,$idEmpresa,$numEmp,$importe,$tipoAsiento, $idaVuelta);
+					$viaje->cargar($destino,$maxPas,$idEmpresa,$numEmp,$importe,$tipoAsiento, $idaVuelta);
 					array_push($arregloViaje,$viaje);
 				}
 		 	}else {
@@ -301,7 +302,7 @@ class Viaje{
 		$consultaInsertar="INSERT INTO viaje(vdestino, vcantmaxpasajeros, idempresa, 
                             rnumeroempleado, vimporte, tipoAsiento, idayvuelta) 
 				VALUES ('".$this->getDestino()."',".$this->getCantMaximaPasajeros().",".$this->getObjEmpresa()->getIdEmpresa().
-                        ",".$this->getResponsableV()->getNumEmpleado().",".$this->getImporte().",'".$this->getTipoAsiento()."','".$this->getIdaVuelta()."')";
+                ",".$this->getResponsableV()->getNumEmpleado().",".$this->getImporte().",'".$this->getTipoAsiento()."','".$this->getIdaVuelta()."')";
 		
 		if($base->Iniciar()){
 			if($base->Ejecutar($consultaInsertar)){
