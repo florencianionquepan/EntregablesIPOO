@@ -16,11 +16,12 @@ include "Viaje.php";
 include "Empresa.php";
 
 $objResponsable=new ResponsableV();
-$objResponsable->cargar(3,"97029","Pepe","Flores");
+$objResponsable->cargar("97029","Pepe","Flores");
+$objResponsable->Buscar(3);
 
 $objEmpresa=new Empresa();
-$objEmpresa->cargar(1,"Empresa1","Av. Argentina 311");
-
+$objEmpresa->cargar("Empresa1","Av. Argentina 311");
+$objEmpresa->Buscar(1);
 
 /*METODOS CON LOS QUE CREE RESPONSABLE Y EMPRESA EN BD:
 $resultado1=$objResponsable->insertar();
@@ -31,10 +32,11 @@ echo $resultadoE?"SI":$objEmpresa->getmensajeoperacion();
 */
 
 $objViaje1=new Viaje();
-$objViaje1->cargar(2,"Puerto Madryn",10,$objResponsable,$objEmpresa,8000,"semicama","NO");
+$objViaje1->cargar("Puerto Madryn",10,$objResponsable,$objEmpresa,8000,"semicama","NO");
 $objViaje2=new Viaje();
-$objViaje2->cargar(1,"Buenos Aires",5,$objResponsable,$objEmpresa,20000,"cama","SI");
-
+$objViaje2->cargar("Buenos Aires",5,$objResponsable,$objEmpresa,20000,"cama","SI");
+$objViaje3=new Viaje();
+$objViaje3->cargar("Bariloche",5,$objResponsable,$objEmpresa,20000,"cama","SI");
 
 /*METODOS CON LOS QUE CREE Y LUEGO MODIFIQUE DOS INSTANCIAS DE VIAJE
 $resV1=$objViaje1->insertar();
@@ -45,6 +47,9 @@ $resV2=$objViaje2->insertar();
 echo $resV2?"SI":$objViaje2->getmensajeoperacion();
 $resMod2=$objViaje2->modificar();
 echo $resMod2?"SI":$objViaje2->getmensajeoperacion();
+OTRA PRUEBA:
+$resultadoViajar=$objViaje3->insertar();
+echo $resultadoViajar?"OK":$objViaje3->getmensajeoperacion();
  */
 
 $objPasajero1=new Pasajero();
@@ -56,6 +61,8 @@ $objPasajero3->cargar("Luna","Perrita","92425","462034",$objViaje2);
 $objPasajero4=new pasajero();
 $objPasajero4->cargar("Mia","Pinina","11391","461087",$objViaje2);
 
+$objViaje=new Viaje();
+$ultimoViaje=$objViaje->obtenerUltimoId();
 /*METODOS PARA CREAR PASAJEROS EN BD: 
 $resultadoP1=$objPasajero1->insertar();
 $resultadoP2=$objPasajero2->insertar();
@@ -63,13 +70,7 @@ $resultadoP3=$objPasajero3->insertar();
 $resultadoP4=$objPasajero4->insertar();
  */
 
- 
-//$pasajeros=[$objPasajero1,$objPasajero2,$objPasajero3,$objPasajero4];
-
-//$codigo,$destino,$cantMaximaPasajeros,$pasajeros,$responsableV, $importe, $idaVuelta
-$objViaje=new Viaje("123","Isla de los pininos",5,$pasajeros,$objResponsable,5000,true);
-
-
+menuOpciones($ultimoViaje);
 
 //Se crea el menú de forma de utilizarlo con el objeto precargado o bien crear uno nuevo:
     function menuOpciones($objViaje){
