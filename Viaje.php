@@ -44,6 +44,18 @@ class Viaje{
         $this->setIdaVuelta($idaVuelta);
     }
  
+    public function cargarConId($codigo,$destino,$cantMaximaPasajeros,$responsableV,
+                                $objEmpresa,$importe,$tipoAsiento,$idaVuelta){
+        $this->setCodigo($codigo);
+        $this->setDestino($destino);
+        $this->setCantMaximaPasajeros($cantMaximaPasajeros);
+        $this->setResponsableV($responsableV);
+        $this->setObjEmpresa($objEmpresa);
+        $this->setImporte($importe);
+        $this->setTipoAsiento($tipoAsiento);
+        $this->setIdaVuelta($idaVuelta);
+    }
+
     public function getCodigo(){
         return $this->codigo;
     }
@@ -124,6 +136,12 @@ class Viaje{
         $this->mensajeoperacion = $mensajeoperacion;
     }
  
+    //setea un pasajero creado a su coleccion de pasajeros:
+    function setearPasajeroUnoaUno($pasajero){
+        $arrayPasajeros=$this->getPasajeros();
+        array_push($arrayPasajeros,$pasajero);
+        $this->setPasajeros($arrayPasajeros);
+    }
 
     
     //Recorre la lista de Pasajeros y va mostrando la información de cada uno de ellos:
@@ -139,10 +157,10 @@ class Viaje{
 
     public function __toString(){
         return "Codigo del viaje: " .$this->getCodigo(). ". Destino: " .$this->getDestino().
-        ".Limite de pasajeros: ".$this->getCantMaximaPasajeros().".Datos de Pasajeros:\n".$this->verPasajeros().
-        "Datos del responsable de viaje: ".$this->getResponsableV()."Empresa:".$this->getObjEmpresa(). 
-        "Importe del viaje:".$this->getImporte().". Tipo de asiento:".$this->getTipoAsiento().
-        ". Ida y vuelta:".$this->getIdaVuelta()."\n";
+        ".Limite de pasajeros: ".$this->getCantMaximaPasajeros().
+        ". Datos del responsable de viaje: ".$this->getResponsableV().".Empresa:".$this->getObjEmpresa(). 
+        ".Importe del viaje:".$this->getImporte().". Tipo de asiento:".$this->getTipoAsiento().
+        ".Ida y vuelta:".$this->getIdaVuelta().".Datos de Pasajeros:\n".$this->verPasajeros()."\n";
     }
     
     
@@ -173,7 +191,7 @@ class Viaje{
 
     /*
     //setea un pasajero modificado a su coleccion de pasajeros:
-    function setearPasajeroModificado($objModificar, $ind){
+    function setearPasajeroUnoaUno($objModificar, $ind){
         $arrayPasajeros=$this->getPasajeros();
         $arrayPasajeros[$ind]=$objModificar;
         $this->setPasajeros($arrayPasajeros);
@@ -269,7 +287,7 @@ class Viaje{
                     $idaVuelta=$row2['idayvuelta'];
 				
 					$viaje=new Viaje();
-					$viaje->cargar($destino,$maxPas,$idEmpresa,$numEmp,$importe,$tipoAsiento, $idaVuelta);
+					$viaje->cargarConId($id,$destino,$maxPas,$numEmp,$idEmpresa,$importe,$tipoAsiento, $idaVuelta);
 					array_push($arregloViaje,$viaje);
 				}
 		 	}else {
