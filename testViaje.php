@@ -72,7 +72,7 @@ $resultadoP4=$objPasajero4->insertar();
 
 menuOpciones($ultimoViaje);
 
-//Se crea el menú de forma de utilizarlo con el objeto precargado o bien crear uno nuevo:
+//Se crea el menú de forma de utilizarlo con el objeto precargado (el ultimo creado en la BD) o bien crear uno nuevo:
 function menuOpciones($idViaje){
     do{
         echo "------Menú de opciones------\n"
@@ -156,10 +156,15 @@ function cargarViaje(){
 
 function verEmpresas(){
     $empresa=new Empresa;
-    $colecc=$empresa->listar();
+    //cuando muestre la empresa deberia mostrar la coleccion de viajes que tengo en la misma:
+    $coleccEmpresas=$empresa->listar();
     $msn="";
-    for ($i=0;$i<count($colecc);$i++){
-        $msn=$msn.$colecc[$i]; 
+    for ($i=0;$i<count($coleccEmpresas);$i++){
+/*         $idEmpresa=$coleccEmpresas[$i]->getIdEmpresa();
+        $viaje=new Viaje;
+        $arregloViaje=$viaje->listar('idempresa='.$idEmpresa);
+        $coleccEmpresas[$i]->setColeccViajes($arregloViaje); */
+        $msn=$msn.$coleccEmpresas[$i];
     }
     echo $msn;
 }
@@ -209,8 +214,9 @@ function solicitarDatosPersona($cont,$objViaje){
         $objPasajero=new Pasajero();
         $objPasajero->cargar($nombre,$apellido,$dni,$telefono,$objViaje);
         $resultadoPasajero=$objPasajero->insertar();
+        //Tambien los voy seteando al objeto para luego de creado el viaje al hacer el echo me los muestre:
+        $objViaje->setearPasajeroUnoaUno($objPasajero);
         echo $resultadoPasajero?"Pasajero cargado ok\n":$objPasajero->getmensajeoperacion();
-        return $objPasajero;
     }elseif(pasajeroCargado($dni)){
         echo "El dni ingresado pertenece a un pasajero ya ingresado, por favor ingrese un pasajero distinto\n";
         solicitarDatosPersona($cont,$objViaje);
@@ -304,7 +310,7 @@ function solicitarCapMaxima($id){
     $objPasajero=new Pasajero();
     $coleccPasajeros=$objPasajero->listar("idviaje=".$id);
     $cantPasajeros=count($coleccPasajeros);
-    echo $cantPasajeros;
+    //echo $cantPasajeros;
     echo "Ingrese la capacidad máxima de pasajeros: ";
     $nuevaCapMaxima=trim(fgets(STDIN));
     while ($nuevaCapMaxima<$cantPasajeros){
