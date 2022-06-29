@@ -4,18 +4,26 @@ class Empresa{
     private $idEmpresa;
     private $nombre;
     private $direccion;
+	private $coleccViajes;
 	private $mensajeoperacion;
 
     public function __construct(){
         $this->idEmpresa="";
         $this->nombre="";
         $this->direccion="";
+		$this->coleccViajes=[];
     }
 
     public function cargar($nombre, $direccion){
         $this->setNombre($nombre);
         $this->setDireccion($direccion);
     }
+
+	public function cargarConId($id,$nombre,$direccion){
+		$this->setIdEmpresa($id);
+		$this->setNombre($nombre);
+        $this->setDireccion($direccion);
+	}
 
     public function getIdEmpresa(){
         return $this->idEmpresa;
@@ -49,8 +57,26 @@ class Empresa{
 		$this->mensajeoperacion = $mensajeoperacion;
 	}
 
+	public function getColeccViajes(){
+		return $this->coleccViajes;
+	}
+
+	public function setColeccViajes($coleccViajes){
+		$this->coleccViajes = $coleccViajes;
+	}
+
+	private function verViajes(){
+		$msn="";
+        $viajes=$this->getColeccViajes();
+        for ($i=0;$i<count($viajes);$i++){
+            $msn=$msn.$viajes[$i]; 
+        }
+        return $msn;
+	}
+
     public function __toString(){
-    return "id:".$this->getIdEmpresa().". Nombre:".$this->getNombre().". Dirección:".$this->getDireccion()."\n"; 
+    return "id:".$this->getIdEmpresa().". Nombre:".$this->getNombre().". Dirección:".$this->getDireccion().
+				$this->verViajes()."\n"; 
     }
 
     /**
@@ -97,7 +123,7 @@ class Empresa{
 					$direccion=$row2['edireccion'];
 				
 					$empresa=new Empresa();
-					$empresa->cargar($nombre,$direccion);
+					$empresa->cargarConId($id,$nombre,$direccion);
 					array_push($arregloEmpresa,$empresa);
 				}
 		 	}else {
@@ -168,6 +194,8 @@ class Empresa{
 		return $resp; 
 	}
 
+
+	
 }
 
 
