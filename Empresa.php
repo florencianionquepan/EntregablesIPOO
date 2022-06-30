@@ -79,6 +79,23 @@ class Empresa{
 				$this->verViajes()."\n"; 
     }
 
+	public function obtenerUltimoId(){
+        $base=new BaseDatos();
+		$consultaViaje="Select MAX(idempresa) from empresa";
+        if($base->Iniciar()){
+			if($base->Ejecutar($consultaViaje)){	
+                if($row2=$base->Registro()){
+                    $resp=$row2['MAX(idempresa)'];
+                }
+		 	}else {
+		 		$this->setmensajeoperacion($base->getError());
+			}
+		 }else {
+		 	$this->setmensajeoperacion($base->getError());
+		}
+        return $resp;
+    }
+
     /**
 	 * Recupera los datos de una empresa por id
 	 */		
