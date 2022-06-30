@@ -24,6 +24,13 @@ class ResponsableV{
         $this->setNombre($nombre);
         $this->setApellido($apellido);
     }
+
+	public function cargarConNum($numEmpleado,$numLicencia, $nombre, $apellido){
+		$this->setNumEmpleado($numEmpleado);
+		$this->setNumLicencia($numLicencia);
+        $this->setNombre($nombre);
+        $this->setApellido($apellido);
+	}
     
     public function getNumEmpleado(){
         return $this->numEmpleado;
@@ -143,7 +150,7 @@ class ResponsableV{
 					$apellido=$row2['rapellido'];
 				
 					$responsable=new ResponsableV();
-					$responsable->cargar($nroEmpleado,$numLicencia,$nombre,$apellido);
+					$responsable->cargarConNum($nroEmpleado,$numLicencia,$nombre,$apellido);
 					array_push($arregloPersona,$responsable);
 	
 				}

@@ -26,8 +26,8 @@ class Viaje{
         $this->destino="";
         $this->cantMaximaPasajeros="";
         $this->pasajeros=[];
-        $this->responsableV="";
-        $this->objEmpresa="";
+        $this->responsableV=new ResponsableV;
+        $this->objEmpresa=new Empresa;
         $this->importe="";
         $this->tipoAsiento="";
         $this->idaVuelta="";
@@ -158,9 +158,9 @@ class Viaje{
     public function __toString(){
         return "Codigo del viaje: " .$this->getCodigo(). ". Destino: " .$this->getDestino().
         ".Limite de pasajeros: ".$this->getCantMaximaPasajeros().
-        ". Datos del responsable de viaje: ".$this->getResponsableV().".Empresa:".$this->getObjEmpresa(). 
-        ".Importe del viaje:".$this->getImporte().". Tipo de asiento:".$this->getTipoAsiento().
-        ".Ida y vuelta:".$this->getIdaVuelta().".Datos de Pasajeros:\n".$this->verPasajeros()."\n";
+        ". \n Datos del responsable de viaje: ".$this->getResponsableV()."Empresa:".$this->getObjEmpresa(). 
+        "Importe del viaje:".$this->getImporte().". Tipo de asiento:".$this->getTipoAsiento().
+        ".Ida y vuelta:".$this->getIdaVuelta()."\n Datos de Pasajeros:\n".$this->verPasajeros()."\n";
     }
     
     
@@ -196,34 +196,6 @@ class Viaje{
         $arrayPasajeros[$ind]=$objModificar;
         $this->setPasajeros($arrayPasajeros);
     }
-
-
-     //El importe del pasaje a vender no se setea al atributo de la clase, ya que sino al vender un pasaje nuevo
-    //el importe del atributo ya estaria afectado por las condiciones del viaje, y se volverían a aplicar los aumentos
-    public function venderPasaje($pasajero){
-        $coleccPasaj=$this->getPasajeros();
-        if ($this->hayPasajeDisponible()){
-            array_push($coleccPasaj,$pasajero);
-            $this->setPasajeros($coleccPasaj);
-            $importeNuevo=$this->aumentarImporte();
-        }
-        return $importeNuevo;
-    }
-
-    protected function hayPasajeDisponible(){
-        $coleccPasaj=$this->getPasajeros();
-        return count($coleccPasaj)<$this->getCantMaximaPasajeros();
-    }
-
-    //aumenta el importe en caso de ser un viaje de ida y vuelta:
-    protected function aumentarImporte(){
-        $importeNuevo=$this->getImporte();
-        if ($this->getIdaVuelta()){
-            $importeNuevo=$this->getImporte()*1.5;
-        }
-        return $importeNuevo;
-    }
-
 */
 
     //METODOS PARA BD
@@ -287,7 +259,8 @@ class Viaje{
                     $idaVuelta=$row2['idayvuelta'];
 				
 					$viaje=new Viaje();
-					$viaje->cargarConId($id,$destino,$maxPas,$numEmp,$idEmpresa,$importe,$tipoAsiento, $idaVuelta);
+                    $viaje->Buscar($id);
+					//$viaje->cargarConId($id,$destino,$maxPas,$numEmp,$idEmpresa,$importe,$tipoAsiento, $idaVuelta);
 					array_push($arregloViaje,$viaje);
 				}
 		 	}else {
@@ -295,7 +268,6 @@ class Viaje{
 			}
 		 }else {
 		 	$this->setmensajeoperacion($base->getError());
-		 	
 		}	
 		return $arregloViaje;
 	}	
