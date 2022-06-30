@@ -158,9 +158,9 @@ class Viaje{
     public function __toString(){
         return "Codigo del viaje: " .$this->getCodigo(). ". Destino: " .$this->getDestino().
         ".Limite de pasajeros: ".$this->getCantMaximaPasajeros().
-        ". \n Datos del responsable de viaje: ".$this->getResponsableV()."Empresa:".$this->getObjEmpresa(). 
+        ". \nDatos del responsable de viaje: ".$this->getResponsableV()."Empresa:".$this->getObjEmpresa(). 
         "Importe del viaje:".$this->getImporte().". Tipo de asiento:".$this->getTipoAsiento().
-        ".Ida y vuelta:".$this->getIdaVuelta()."\n Datos de Pasajeros:\n".$this->verPasajeros()."\n";
+        ".Ida y vuelta:".$this->getIdaVuelta()."\nDatos de Pasajeros:\n".$this->verPasajeros()."\n";
     }
     
     
