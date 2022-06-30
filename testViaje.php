@@ -1,105 +1,146 @@
 <?php
 
-
-/* Una empresa de transporte desea gestionar la información correspondiente a los viajes que
-realiza. De los pasajeros se conoce su nombre, apellido, número de documento y teléfono. El
-viaje ahora contiene una referencia a una colección de objetos de la clase Pasajero. También se
-desea guardar la información de la persona responsable de realizar el viaje, para ello cree una
-clase ResponsableV que registra el número de empleado, número de licencia, nombre y apellido.
-La clase Viaje debe hacer referencia al responsable de realizar el viaje.
- */
-
 include "BaseDatos.php";
 include "Pasajero.php";
 include "ResponsableV.php";
 include "Viaje.php";
 include "Empresa.php";
 
-$objResponsable=new ResponsableV();
-$objResponsable->cargar("97029","Pepe","Flores");
-$objResponsable->Buscar(3);
-
-$objEmpresa=new Empresa();
-$objEmpresa->cargar("Empresa1","Av. Argentina 311");
-$objEmpresa->Buscar(1);
-
-/*METODOS CON LOS QUE CREE RESPONSABLE Y EMPRESA EN BD:
-$resultado1=$objResponsable->insertar();
-echo $resultado1?"SI":$objResponsable->getmensajeoperacion();
-
-$resultadoE=$objEmpresa->insertar();
-echo $resultadoE?"SI":$objEmpresa->getmensajeoperacion();
-*/
-
-$objViaje1=new Viaje();
-$objViaje1->cargar("Puerto Madryn",10,$objResponsable,$objEmpresa,8000,"semicama","NO");
-$objViaje2=new Viaje();
-$objViaje2->cargar("Buenos Aires",5,$objResponsable,$objEmpresa,20000,"cama","SI");
-$objViaje3=new Viaje();
-$objViaje3->cargar("Bariloche",5,$objResponsable,$objEmpresa,20000,"cama","SI");
-
-/*METODOS CON LOS QUE CREE Y LUEGO MODIFIQUE DOS INSTANCIAS DE VIAJE
-$resV1=$objViaje1->insertar();
-echo $resV1?"SI":$objViaje1->getmensajeoperacion();
-$resMod1=$objViaje1->modificar();
-echo $resMod1?"SI":$objViaje1->getmensajeoperacion();
-$resV2=$objViaje2->insertar();
-echo $resV2?"SI":$objViaje2->getmensajeoperacion();
-$resMod2=$objViaje2->modificar();
-echo $resMod2?"SI":$objViaje2->getmensajeoperacion();
-OTRA PRUEBA:
-$resultadoViajar=$objViaje3->insertar();
-echo $resultadoViajar?"OK":$objViaje3->getmensajeoperacion();
- */
-
-$objPasajero1=new Pasajero();
-$objPasajero1->cargar("Igor","Gatito","36192","462643", $objViaje2);
-$objPasajero2=new Pasajero();
-$objPasajero2->cargar("Lana","Gatita","13823","462643",$objViaje2);
-$objPasajero3=new Pasajero();
-$objPasajero3->cargar("Luna","Perrita","92425","462034",$objViaje2);
-$objPasajero4=new pasajero();
-$objPasajero4->cargar("Mia","Pinina","11391","461087",$objViaje2);
-
 $objViaje=new Viaje();
-$ultimoViaje=$objViaje->obtenerUltimoId();
-/*METODOS PARA CREAR PASAJEROS EN BD: 
-$resultadoP1=$objPasajero1->insertar();
-$resultadoP2=$objPasajero2->insertar();
-$resultadoP3=$objPasajero3->insertar();
-$resultadoP4=$objPasajero4->insertar();
- */
+$ultimoIdViaje=$objViaje->obtenerUltimoId();
 
-menuOpciones($ultimoViaje);
-
-//Se crea el menú de forma de utilizarlo con el objeto precargado (el ultimo creado en la BD) o bien crear uno nuevo:
-function menuOpciones($idViaje){
+function menuEmpresas(){
     do{
-        echo "------Menú de opciones------\n"
-            ."1) Cargar información de un viaje.\n"
-            ."2) Modificar Viaje.\n"
-            ."3) Mostrar Viaje.\n"
-            ."4) Salir.\n";
-                
+        echo "------Menú de opciones Empresa------\n"
+            ."1) Cargar nueva empresa.\n"
+            ."2) Mostrar todas las empresas.\n"
+            ."3) Modificar empresa.\n"
+            ."4) Mostrar ultima empresa creada.\n"
+            ."5) Borrar una empresa. \n"
+            ."6) Ir al menú de viajes \n"
+            ."7) Salir \n";
+
             echo "Ingrese su eleccion: ";
             $eleccion = trim(fgets(STDIN));            
     
             switch($eleccion){
-                //En el caso1, se tendra la opción de cargar un viaje nuevo y sobreescribir al precargado:
-                case 1:$idViaje=cargarViaje();break;
-                //Estas dos opciones pueden ejecutarse tanto con el viaje precargado como con uno nuevo que cree el usuario:
-                case 2:modificarViaje($idViaje);break;
-                case 3:mostrarViaje($idViaje);break;
-                case 4: echo "Usted ha salido del menú de opciones";break;
+                case 1:$idEmpresa=cargarEmpresa();break;
+                case 2:listarEmpresas();break;
+                case 3:modificarEmpresa();break;
+                case 4:mostrarEmpresa($idEmpresa);break;
+                case 5:eliminarEmpresa();break;
+                case 6:menuViajes($ultimoIdViaje);break;
+                case 7: echo "Usted ha salido del menú de empresa";break;
                 default: echo "elección ingresada no valida, por favor ingrese otra\n";break;
             }
-    }while($eleccion!=4);
+    }while($eleccion!=7);
 }
+
+menuViajes($ultimoIdViaje);
+
+//Se crea el menú de forma de utilizarlo con el objeto viaje precargado (el ultimo creado en la BD) o bien crear uno nuevo:
+function menuViajes($idViaje){
+    do{
+        echo "------Menú de opciones Viajes------\n"
+            ."1) Cargar información de un nuevo viaje.\n"
+            ."2) Mostrar todos los viajes.\n"
+            ."3) Modificar viaje.\n"
+            ."4) Mostrar ultimo viaje creado.\n"
+            ."5) Borrar un viaje. \n"
+            ."6) Salir de menú de viajes \n";
+
+            echo "Ingrese su eleccion: ";
+            $eleccion = trim(fgets(STDIN));            
+    
+            switch($eleccion){
+                case 1:$idViaje=cargarViaje();break;
+                case 2:echo listarViajes();break;
+                case 3:modificarViaje();break;
+                case 4:mostrarViaje($idViaje);break;
+                case 5:eliminarViaje();break;
+                case 6: echo "Usted ha salido del menú de viajes";break;
+                default: echo "elección ingresada no valida, por favor ingrese otra\n";break;
+            }
+    }while($eleccion!=6);
+}
+
+/**
+ * FUNCIONES PARA LISTAR LOS VIAJES
+ */
+function arrayToString($arreglo){
+    $msn="";
+    for ($i=0;$i<count($arreglo);$i++){
+        $msn=$msn.$arreglo[$i]; 
+    }
+    return $msn;
+}
+
+function listarViajes(){
+    $objViaje=new Viaje();
+    $coleccViajes=$objViaje->listar();
+    $viajesConPasaj=[];
+    foreach($coleccViajes as $viaje){
+        $viajeConPasaj=setearPasajeros($viaje->getCodigo());
+        array_push($viajesConPasaj,$viajeConPasaj);
+    }
+    $viajesString=arrayToString($viajesConPasaj);
+    return $viajesString;
+}
+
 
 function mostrarViaje($id){
     $objViaje=setearPasajeros($id);
     echo $objViaje;
 }
+
+/**
+ * FUNCIONES PARA BORRAR UN VIAJE
+ */
+
+ function eliminarViaje(){
+    echo "Escriba el codigo del viaje a eliminar: ";
+    $idBorrar=trim(fgets(STDIN));
+    $existe=existeViaje($idBorrar);
+    if($existe){
+        $objViaje=setearPasajeros($idBorrar);
+        echo "Se borrará el siguiente viaje con los pasajeros siguientes: \n";
+        echo $objViaje;
+        echo "Desea continuar?(si/no): \n";
+        $rta=trim(fgets(STDIN));
+        if($rta=="si"){
+            $objPasajero=new Pasajero();
+            $coleccPasajeros=$objPasajero->listar("idviaje=".$idBorrar);
+            borrarPasajeros($coleccPasajeros);
+            $resp=$objViaje->eliminar();
+            echo $resp?"Se ha eliminado correctamente el viaje\n":$objViaje->getmensajeoperacion();
+        }else{
+            echo "No se ha eliminado el viaje \n";
+        }
+    }else{
+        echo "No existe el viaje con el id. ingresado\n";
+    }
+ }
+
+ function existeViaje($id){
+    $viaje=new Viaje();
+    $viajes=$viaje->listar();
+    $existe=false;
+    $i=0;
+    while($i<count($viajes) & !$existe){
+        if($viajes[$i]->getCodigo()==$id){
+            $existe=true;
+        }
+        $i++;
+    }
+    return $existe;
+ }
+
+ function borrarPasajeros($pasajeros){
+    for($i=0;$i<count($pasajeros);$i++){
+        $pasajeros[$i]->eliminar();
+    }
+    echo "Se han eliminado los pasajeros \n";
+ }
 
 //Esta funcion busca todos los pasajeros con el idViaje que le paso por parámetro, los setea a ese objViaje
 //Y me retorna el viaje con la coleccion de pasajeros
@@ -109,7 +150,6 @@ function setearPasajeros($id){
     //AHORA A ESE VIAJE LE SETEO LA COLECCION PARA PODER MOSTRARLO
     $objViaje=new Viaje();
     $objViaje->Buscar($id);
-    //ACA PODRIA CONTROLAR QUE EL id EXISTA
     $objViaje->setPasajeros($coleccPasajeros);
     return $objViaje;
 }
@@ -122,51 +162,72 @@ function setearPasajeros($id){
 function cargarViaje(){
     echo "Ingrese destino del viaje: ";
     $destino = trim(fgets(STDIN));
-    echo "Ingrese la capacidad máxima de pasajeros: ";
-    $capMaxima=intval(trim(fgets(STDIN)));
-
-    echo "Escoja alguna empresa de viaje:\n";
-    verEmpresas();
-    $objEmpresa=ingresarEmpresa();
-
-    echo "Ingrese los datos del responsable del viaje: ";
-    $objResponsable=cargarResponsable();
-
-    echo "Ingrese importe del viaje: ";
-    $importe = intval(trim(fgets(STDIN)));
-    echo "Ingrese tipo de asiento del viaje: ";
-    $tipo = trim(fgets(STDIN));
-    echo "Ingrese si es ida y vuelta (SI/NO): ";
-    $idaVuelta=trim(fgets(STDIN));
-
-    //$destino,$cantMaximaPasajeros,$responsableV,$objEmpresa,$importe,$tipoAsiento,$idaVuelta
-    $objViaje=new Viaje();
-    $objViaje->cargar($destino,$capMaxima,$objResponsable,$objEmpresa,$importe,$tipo,$idaVuelta);
-    $resultadoViajeCreado=$objViaje->insertar();
-    echo $resultadoViajeCreado?"Viaje creado ok, ahora es momento de los pasajeros: \n":$objViaje->getmensajeoperacion();
-    $idViaje=$objViaje->obtenerUltimoId();
-    $objViaje->Buscar($idViaje);
-    if($resultadoViajeCreado){
-        cargarDatos($capMaxima,$objViaje);
-        setearPasajeros($objViaje);
+    existeDestino($destino);
+    if(existeDestino($destino)){
+        echo "No es posible crear un viaje con un destino ya creado \n";
+    }else{
+        echo "Destino ingresado correctamente \n";
+        echo "Ingrese la capacidad máxima de pasajeros: ";
+        $capMaxima=intval(trim(fgets(STDIN)));
+    
+        echo "Escoja alguna empresa de viaje:\n";
+        verEmpresas();
+        $objEmpresa=ingresarEmpresa();
+    
+        echo "Escoja algún responsable de viaje: \n";
+        verResponsables();
+        echo "Ingrese el numero del responsable elegido o 0 para crear uno nuevo: \n";
+        $codigoResp=trim(fgets(STDIN));
+        if($codigoResp==0){
+            echo "Ingrese los datos del responsable del viaje: ";
+            $objResponsable=cargarResponsable();
+        }else{
+            $objResponsable=ingresarResponsable($codigoResp);
+        }
+        echo "Ingrese importe del viaje: ";
+        $importe = intval(trim(fgets(STDIN)));
+        echo "Ingrese tipo de asiento del viaje: ";
+        $tipo = trim(fgets(STDIN));
+        echo "Ingrese si es ida y vuelta (SI/NO): ";
+        $idaVuelta=trim(fgets(STDIN));
+    
+        //$destino,$cantMaximaPasajeros,$responsableV,$objEmpresa,$importe,$tipoAsiento,$idaVuelta
+        $objViaje=new Viaje();
+        $objViaje->cargar($destino,$capMaxima,$objResponsable,$objEmpresa,$importe,$tipo,$idaVuelta);
+        $resultadoViajeCreado=$objViaje->insertar();
+        echo $resultadoViajeCreado?"Viaje creado ok, desea agregar pasajeros? (si/no): \n":$objViaje->getmensajeoperacion();
+        $sumarPasajeros=trim(fgets(STDIN));
+        $idViaje=$objViaje->obtenerUltimoId();
+        $objViaje->Buscar($idViaje);
+        if ($sumarPasajeros=="si"){
+            cargarDatos($capMaxima,$objViaje);
+            setearPasajeros($objViaje);
+        }
+        echo $objViaje;
+        return $idViaje;
     }
-    echo $objViaje;
-    return $idViaje;
+
+}
+
+function existeDestino($destinoIng){
+    $objViaje=new Viaje();
+    $viajesCargados=$objViaje->listar();
+    $existeDestino=false;
+    $i=0;
+    $totalViajes=count($viajesCargados);
+    while($i<$totalViajes && !$existeDestino){
+        if($viajesCargados[$i]->getDestino()==$destinoIng){
+            $existeDestino=true;
+        }
+        $i++;
+    }
+    return $existeDestino;
 }
 
 function verEmpresas(){
     $empresa=new Empresa;
-    //cuando muestre la empresa deberia mostrar la coleccion de viajes que tengo en la misma:
     $coleccEmpresas=$empresa->listar();
-    $msn="";
-    for ($i=0;$i<count($coleccEmpresas);$i++){
-/*         $idEmpresa=$coleccEmpresas[$i]->getIdEmpresa();
-        $viaje=new Viaje;
-        $arregloViaje=$viaje->listar('idempresa='.$idEmpresa);
-        $coleccEmpresas[$i]->setColeccViajes($arregloViaje); */
-        $msn=$msn.$coleccEmpresas[$i];
-    }
-    echo $msn;
+    echo arrayToString($coleccEmpresas);
 }
 
 function ingresarEmpresa(){
@@ -175,13 +236,76 @@ function ingresarEmpresa(){
     $objEmpresa=new Empresa();
     $existe=$objEmpresa->Buscar($codE);
     while(!$existe){
-        echo "Por favor, escoja un codigo de empresa válido: ";
+        echo "Por favor, escoja un id. válido: ";
         $codE=trim(fgets(STDIN));
         $objEmpresa=new Empresa();
         $existe=$objEmpresa->Buscar($codE);
     }
     return $objEmpresa;
 }
+
+//Aca me muestra los responsables de viajes eliminados. No todos. Los que ya tienen un viaje asignado no pueden tener
+//otro viaje. Asi se mantiene la relacion 1 a 1. 
+function verResponsables(){
+    $resp=new ResponsableV;
+    $coleccResponsableV=$resp->listar();
+    $objViaje=new Viaje();
+    $viajes=$objViaje->listar();
+    $responsablesMostrar=[];
+    $i=0;
+    //voy haciendo la verificacion de tieneViaje con cada empleado.
+    //sino la tiene la incluyo en un array
+    foreach($coleccResponsableV as $respo){
+        if (!tieneViaje($respo,$viajes)){
+            array_push($responsablesMostrar,$respo);
+        }
+    }
+    if(count($responsablesMostrar)==0){
+        echo "No hay empleados libres. Deberá crear uno nuevo \n";
+    }
+    echo arrayToString($responsablesMostrar);
+}
+
+function tieneViaje($empleado,$viajes){
+    $tieneViaje=false;
+    $i=0;
+    while(!$tieneViaje && $i<count($viajes)){
+        echo $viajes[$i]->getResponsableV();
+        if($viajes[$i]->getResponsableV()->getNumEmpleado()==$empleado->getNumEmpleado()){
+            $tieneViaje=true;
+        }
+        $i++;
+    }
+    return $tieneViaje;
+}
+
+function cargarResponsable(){
+    echo "Ingrese licencia: ";
+    $licencia=trim(fgets(STDIN));
+    echo "Ingrese nombre: ";
+    $nombre=trim(fgets(STDIN));
+    echo "Ingrese apellido: ";
+    $apellido=trim(fgets(STDIN));
+    $objResp=new ResponsableV();
+    $objResp->cargar($licencia,$nombre,$apellido);
+    $resultadoRespo=$objResp->insertar();
+    echo $resultadoRespo?"Responsable cargado ok \n":$resultadoRespo->getmensajeoperacion();
+    $objResp->BuscarPorLic($licencia);
+    return $objResp;
+}
+
+function ingresarResponsable($numEmp){
+    $objResp=new ResponsableV();
+    $existe=$objResp->Buscar($numEmp);
+    while(!$existe){
+        echo "Por favor, escoja un numero de empleado válido: ";
+        $numEmp=trim(fgets(STDIN));
+        $objResp=new ResponsableV();
+        $existe=$objResp->Buscar($numEmp);
+    }
+    return $objResp;
+}
+
 //Se cargan los datos de los pasajeros en el caso de estar creando un nuevo objeto de clase Viaje:
 function cargarDatos($capMaxima,$objViaje){
     $cont=-1;
@@ -228,54 +352,29 @@ function pasajeroCargado($dni){
     $pasajero=new Pasajero();
     $existe=$pasajero->Buscar($dni);
     return $existe;
-
-    /* //se hace un recorrido parcial de la lista de pasajeros cargada hasta el momento:
-    // si encuentra un obj. con el dni, corta el recorrido y devuelve true
-    //sino devuelve false;
-    $result=false;
-    $j=0;
-    $objPasajero=new Pasajero();
-    $objPasajero->listar();
-    while ($result==false && $j<count($listaPasajeros)){
-        if ($listaPasajeros[$j]->getDni()==$dni){
-            $result=true;
-        }else{
-            $j++;
-        }
-    }
-    return $result; */
 } 
 
-function cargarResponsable(){
-    echo "Ingrese licencia: ";
-    $licencia=trim(fgets(STDIN));
-    echo "Ingrese nombre: ";
-    $nombre=trim(fgets(STDIN));
-    echo "Ingrese apellido: ";
-    $apellido=trim(fgets(STDIN));
-    $objResp=new ResponsableV();
-    $objResp->cargar($licencia,$nombre,$apellido);
-    $resultadoRespo=$objResp->insertar();
-    echo $resultadoRespo?"Responsable cargado ok \n":$resultadoRespo->getmensajeoperacion();
-    $objResp->BuscarPorLic($licencia);
-    return $objResp;
-}
-
-
 /**
- * FUNCIONES QUE PERMITEN MODIFICAR UN VIAJE EXISTENTE. AHORA EL PARAMETRO ES id. ACTUALIZAR.
+ * FUNCIONES QUE PERMITEN MODIFICAR UN VIAJE EXISTENTE. AHORA EL PARAMETRO ES id. 
  */
-function modificarViaje($id){
-    echo "Desea modificar destino, cantidad maxima, importe, tipo de asiento, y si es ida y vuelta?(si/no): ";
-    $modifViaje=trim(fgets(STDIN));
-    if ($modifViaje=="si"){
-        modificarDatosViaje($id);
+function modificarViaje(){
+    echo "Seleccione el codigo del viaje a modificar: ";
+    $id=trim(fgets(STDIN));
+    $existe=existeViaje($id);
+    if($existe){
+        echo "Desea modificar destino, cantidad maxima, importe, tipo de asiento, y si es ida y vuelta?(si/no): ";
+        $modifViaje=trim(fgets(STDIN));
+        if ($modifViaje=="si"){
+            modificarDatosViaje($id);
+        }
+        echo "Desea modificar los datos de algun pasajero?(si/no): ";
+        $modifPasajeros=trim(fgets(STDIN));
+        if ($modifPasajeros=="si"){
+            ingresarDatos($id);
+        } 
+    }else{
+        echo "No existe el viaje con el id. ingresado \n";
     }
-    echo "Desea modificar los datos de algun pasajero?(si/no): ";
-    $modifPasajeros=trim(fgets(STDIN));
-    if ($modifPasajeros=="si"){
-        ingresarDatos($id);
-    } 
 }
 
 function modificarDatosViaje($id){
@@ -355,8 +454,6 @@ function ingresarDatos($id){
     
 }
  
-
-
 
 
 ?>
