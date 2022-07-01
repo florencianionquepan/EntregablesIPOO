@@ -253,13 +253,13 @@ class Viaje{
 				while($row2=$base->Registro()){
 					
 					$id=$row2['idviaje'];
-					$destino=$row2['vdestino'];
+/* 					$destino=$row2['vdestino'];
                     $maxPas=$row2['vcantmaxpasajeros'];
                     $idEmpresa=$row2['idempresa'];
                     $numEmp=$row2['rnumeroempleado'];
 					$importe=$row2['vimporte'];
 					$tipoAsiento=$row2['tipoAsiento'];
-                    $idaVuelta=$row2['idayvuelta'];
+                    $idaVuelta=$row2['idayvuelta']; */
 				
 					$viaje=new Viaje();
                     $viaje->Buscar($id);
