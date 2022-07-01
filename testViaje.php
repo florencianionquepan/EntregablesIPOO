@@ -128,7 +128,7 @@ function tieneViajes($id){
 
 function menuViajes(){
     do{
-        echo "------Menú de opciones Viajes------\n"
+        echo "\n------Menú de opciones Viajes------\n"
             ."1) Cargar información de un nuevo viaje.\n"
             ."2) Mostrar todos los viajes.\n"
             ."3) Modificar viaje.\n"
@@ -189,7 +189,8 @@ function mostrarViaje($id){
  function eliminarViaje(){
     echo "Escriba el codigo del viaje a eliminar: ";
     $idBorrar=trim(fgets(STDIN));
-    $existe=existeViaje($idBorrar);
+    $viaje=new Viaje();
+    $existe=$viaje->Buscar($idBorrar);
     if($existe){
         $objPasajero=new Pasajero();
         $coleccPasajeros=$objPasajero->listar("idviaje=".$idBorrar);
@@ -219,21 +220,6 @@ function mostrarViaje($id){
     }else{
         echo "No se ha eliminado el viaje \n";
     }
- }
-
- //esto esta al dope me parece
- function existeViaje($id){
-    $viaje=new Viaje();
-    $viajes=$viaje->listar();
-    $existe=false;
-    $i=0;
-    while($i<count($viajes) & !$existe){
-        if($viajes[$i]->getCodigo()==$id){
-            $existe=true;
-        }
-        $i++;
-    }
-    return $existe;
  }
 
  function borrarPasajeros($pasajeros){
@@ -292,6 +278,7 @@ function cargarViaje(){
         }else{
             $objResponsable=ingresarResponsable($codigoResp);
         }
+
         echo "Ingrese importe del viaje: ";
         $importe = intval(trim(fgets(STDIN)));
         echo "Ingrese tipo de asiento del viaje: ";
@@ -395,7 +382,8 @@ function cargarResponsable(){
     $objResp->cargar($licencia,$nombre,$apellido);
     $resultadoRespo=$objResp->insertar();
     echo $resultadoRespo?"Responsable cargado ok \n":$objResp->getmensajeoperacion();
-    $objResp->BuscarPorLic($licencia);
+    $resp=$objResp->obtenerUltimoId();
+    $objResp->setNumEmpleado($resp);
     return $objResp;
 }
 
@@ -465,7 +453,8 @@ function pasajeroCargado($dni){
 function modificarViaje(){
     echo "Seleccione el codigo del viaje a modificar: ";
     $id=trim(fgets(STDIN));
-    $existe=existeViaje($id);
+    $viaje=new Viaje();
+    $existe=$viaje->Buscar($id);
     if($existe){
         echo "Desea modificar destino, cantidad maxima, importe, tipo de asiento, y si es ida y vuelta?(si/no): ";
         $modifViaje=trim(fgets(STDIN));
@@ -571,7 +560,8 @@ function ingresarDatos($id){
 function agregarPasajeros(){
     echo "Por favor ingrese el id. del viaje al cual agregarle pasajeros:\n";
     $idViaje=trim(fgets(STDIN));
-    $existe=existeViaje($idViaje);
+    $viaje=new Viaje();
+    $existe=$viaje->Buscar($idViaje);
     if($existe){
         $viaje=new Viaje();
         $viaje=setearPasajeros($idViaje);
@@ -583,16 +573,17 @@ function agregarPasajeros(){
         }else{
             echo "El viaje se encuentra lleno \n";
         }
-    }  else{
-    echo "No existe el viaje con el id. ingresado \n";
+        echo $viaje;
+    }else{
+        echo "No existe el viaje con el id. ingresado \n";
     }
-    echo $viaje;
 }
 
 function eliminarPasajeros(){
     echo "Por favor ingrese el id. del viaje al cual eliminarle pasajeros:\n";
     $idViaje=trim(fgets(STDIN));
-    $existe=existeViaje($idViaje);
+    $viaje=new Viaje();
+    $existe=$viaje->Buscar($idViaje);
     if($existe){
         $viaje=new Viaje();
         $viaje=setearPasajeros($idViaje);
