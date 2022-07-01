@@ -435,7 +435,7 @@ function solicitarDatosPersona($cont,$objViaje){
         $objViaje->setearPasajeroUnoaUno($objPasajero);
         echo $resultadoPasajero?"Pasajero cargado ok\n":$objPasajero->getmensajeoperacion();
     }elseif(pasajeroCargado($dni)){
-        echo "El dni ingresado pertenece a un pasajero ya ingresado, por favor ingrese un pasajero distinto\n";
+        echo "El dni ingresado pertenece a un pasajero ya ingresado, por favor ingrese un dni distinto \n";
         solicitarDatosPersona($cont,$objViaje);
     }
 }
@@ -535,7 +535,7 @@ function ingresarDatos($id){
         $ind=$datos[1];
         //traer ese pasajero de la BD:
         $resPasajero=$pasajero->Buscar($dni);
-        echo $resPasajero?"Pasajero encontrado en BD OK \n":$pasajero->getmensajeoperacion();
+        echo $resPasajero?"Pasajero encontrado en viaje OK \n":$pasajero->getmensajeoperacion();
         echo "Pasajero a modificar: ".$pasajero;
 
         echo "Ingrese el nombre correcto: ";
