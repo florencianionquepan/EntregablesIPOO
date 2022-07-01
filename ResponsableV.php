@@ -77,6 +77,25 @@ class ResponsableV{
                 ".Nombre: ".$this->getNombre().".Apellido: ".$this->getApellido()."\n";
     }
 
+
+	//Retorna el ultimo id generado:
+	public function obtenerUltimoId(){
+        $base=new BaseDatos();
+		$consultaViaje="Select MAX(rnumeroempleado) from responsable";
+        if($base->Iniciar()){
+			if($base->Ejecutar($consultaViaje)){	
+                if($row2=$base->Registro()){
+                    $resp=$row2['MAX(rnumeroempleado)'];
+                }
+		 	}else {
+		 		$this->setmensajeoperacion($base->getError());
+			}
+		 }else {
+		 	$this->setmensajeoperacion($base->getError());
+		}
+        return $resp;
+    }
+	
     	/**
 	 * Recupera los datos de una persona por dni
 	 * @param int $dni
@@ -103,28 +122,6 @@ class ResponsableV{
 		}else {
 		 	$this->setmensajeoperacion($base->getError());
 		 	
-		}		
-		return $resp;
-	}	
-    
-	public function BuscarPorLic($lic){
-		$base=new BaseDatos();
-		$consultaPersona="Select * from responsable where rnumerolicencia=".$lic;
-		$resp= false;
-		if($base->Iniciar()){
-			if($base->Ejecutar($consultaPersona)){
-				if($row2=$base->Registro()){					
-				    $this->setNumEmpleado($row2['rnumeroempleado']);
-					$this->setNombre($row2['rnombre']);
-					$this->setApellido($row2['rapellido']);
-					$this->setNumLicencia($lic);
-					$resp= true;
-				}				
-		 	}else {
-		 		$this->setmensajeoperacion($base->getError());
-			}
-		}else {
-		 	$this->setmensajeoperacion($base->getError());
 		}		
 		return $resp;
 	}	
