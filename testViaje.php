@@ -9,16 +9,17 @@ include "Empresa.php";
 $objViaje=new Viaje();
 $ultimoIdViaje=$objViaje->obtenerUltimoId();
 
+menuEmpresas();
+
 function menuEmpresas(){
     do{
-        echo "------Menú de opciones Empresa------\n"
+        echo "\n------Menú de opciones Empresa------\n"
             ."1) Cargar nueva empresa.\n"
             ."2) Mostrar todas las empresas.\n"
             ."3) Modificar empresa.\n"
-            ."4) Mostrar ultima empresa creada.\n"
-            ."5) Borrar una empresa. \n"
-            ."6) Ir al menú de viajes \n"
-            ."7) Salir \n";
+            ."4) Borrar una empresa. \n"
+            ."5) Ir al menú de viajes \n"
+            ."6) Salir \n";
 
             echo "Ingrese su eleccion: ";
             $eleccion = trim(fgets(STDIN));            
@@ -27,15 +28,17 @@ function menuEmpresas(){
                 case 1:$idEmpresa=crearEmpresa();break;
                 case 2:echo listarEmpresas();break;
                 case 3:modificarEmpresa();break;
-                case 4:mostrarEmpresa($idEmpresa);break;
-                case 5:eliminarEmpresa();break;
-                case 6:menuViajes($ultimoIdViaje);break;
-                case 7: echo "Usted ha salido del menú de empresa";break;
+                case 4:eliminarEmpresa();break;
+                case 5:menuViajes();break;
+                case 6: echo "Usted ha salido del menú de empresa";break;
                 default: echo "elección ingresada no valida, por favor ingrese otra\n";break;
             }
-    }while($eleccion!=7);
+    }while($eleccion!=6);
 }
 
+/*
+ * FUNCION QUE PERMITEN CREAR UNA EMPRESA: 
+ */
 function crearEmpresa(){
     echo "Ingrese Nombre: ";
     $nombre=trim(fgets(STDIN));
@@ -51,7 +54,9 @@ function crearEmpresa(){
     return $objE;
 }
 
-//las muestra con los viajes:
+/*
+ * FUNCIONES QUE PERMITEN LISTAR LAS EMPRESAS CON SUS VIAJES: 
+ */
 function listarEmpresas(){
     $empresa=new Empresa();
     $coleccEmpresas=$empresa->listar();
@@ -67,49 +72,85 @@ function listarEmpresas(){
 function setearViajes($id){
     $objViaje=new Viaje();
     $viajes=$objViaje->listar("idempresa=".$id);
+    $empresa=new Empresa;
     $empresa->Buscar($id);
     $empresa->setColeccViajes($viajes);
     return $empresa;
 }
 
+/*
+ * FUNCIONES QUE PERMITEN MODIFICAR NOMBRE Y DIRECCION DE EMPRESA
+ */
 function modificarEmpresa(){
-    //modifica nombre y direccion
+    echo "Escriba el id. de la empresa a modificar:\n";
+    $id=trim(fgets(STDIN));
+    $objEmpresa=seleccionarEmpresa($id);
+    echo "Escriba el nuevo nombre:\n";
+    $nuevoNom=trim(fgets(STDIN));
+    echo "Escriba la nueva direccion: \n";
+    $nuevaDire=trim(fgets(STDIN));
+    //actualizo el obj. en PHP
+    $objEmpresa->setNombre($nuevoNom);
+    $objEmpresa->setDireccion($nuevaDire);
+    $resp=$objEmpresa->modificar();
+    echo $resp?"La empresa se modifico OK \n":$objEmpresa->getmensajeoperacion();
+    echo $objEmpresa;
 }
 
+/*
+ * FUNCIONES QUE PERMITEN ELIMINAR UNA EMPRESA. SI POSEE VIAJES DESDE ESTE MENÚ NO SE PUEDE ELIMINAR.
+ */
 function eliminarEmpresa(){
-    //aca si tiene viajes no la permite eliminar
+    echo "Escriba el id. de la empresa a eliminar:\n";
+    $id=trim(fgets(STDIN));
+    $objEmpresa=seleccionarEmpresa($id);
+    $tieneViajes=tieneViajes($id);
+    if($tieneViajes){
+        echo "La empresa seleccionada posee viajes. No se puede eliminar. Si lo desea, dirijase al menú de viajes y elimine primero aquellos viajes que posea.\n";
+    }else{
+        $resp=$objEmpresa->eliminar();
+        echo $resp?"La empresa fue eliminada OK":$objEmpresa->getmensajeoperacion();   
+    }
 }
 
-menuViajes($ultimoIdViaje);
+function tieneViajes($id){
+    $viajes=$objViaje->listar("idempresa=".$id);
+    $tieneViajes=false;
+    if(count($viajes)>0){
+        $tieneViajes=true;
+    }
+    return $tieneViajes;
+}
 
+/*
+ * MENU VIAJES: 
+ */
 
-function menuViajes($idViaje){
+function menuViajes(){
     do{
         echo "------Menú de opciones Viajes------\n"
             ."1) Cargar información de un nuevo viaje.\n"
             ."2) Mostrar todos los viajes.\n"
             ."3) Modificar viaje.\n"
-            ."4) Mostrar ultimo viaje creado.\n"
-            ."5) Borrar un viaje. \n"
-            ."6) Agregar pasajeros a un viaje \n"
-            ."7) Eliminar pasajeros de un viaje \n"
-            ."8) Salir de menú de viajes \n";
+            ."4) Borrar un viaje. \n"
+            ."5) Agregar pasajeros a un viaje \n"
+            ."6) Eliminar pasajeros de un viaje \n"
+            ."7) Salir de menú de viajes \n";
 
             echo "Ingrese su eleccion: ";
             $eleccion = trim(fgets(STDIN));            
     
             switch($eleccion){
-                case 1:$idViaje=cargarViaje();break;
+                case 1:cargarViaje();break;
                 case 2:echo listarViajes();break;
                 case 3:modificarViaje();break;
-                case 4:mostrarViaje($idViaje);break;
-                case 5:eliminarViaje();break;
-                case 6:agregarPasajeros();break;
-                case 7:eliminarPasajeros();break;
-                case 8: echo "Usted ha salido del menú de viajes";break;
+                case 4:eliminarViaje();break;
+                case 5:agregarPasajeros();break;
+                case 6:eliminarPasajeros();break;
+                case 7: echo "Usted ha salido del menú de viajes";break;
                 default: echo "elección ingresada no valida, por favor ingrese otra\n";break;
             }
-    }while($eleccion!=8);
+    }while($eleccion!=7);
 }
 
 /**
@@ -180,6 +221,7 @@ function mostrarViaje($id){
     }
  }
 
+ //esto esta al dope me parece
  function existeViaje($id){
     $viaje=new Viaje();
     $viajes=$viaje->listar();
