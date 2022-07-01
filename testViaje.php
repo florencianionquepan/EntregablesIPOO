@@ -66,7 +66,7 @@ function listarEmpresas(){
         array_push($empresasConViajes,$empresaConViajes);
     }
     $empresasString=arrayToString($empresasConViajes);
-    return $empresasString;
+    return "----EMPRESAS-----\n".$empresasString;
 }
 
 function setearViajes($id){
@@ -114,6 +114,7 @@ function eliminarEmpresa(){
 }
 
 function tieneViajes($id){
+    $objViaje=new Viaje();
     $viajes=$objViaje->listar("idempresa=".$id);
     $tieneViajes=false;
     if(count($viajes)>0){
@@ -173,7 +174,7 @@ function listarViajes(){
         array_push($viajesConPasaj,$viajeConPasaj);
     }
     $viajesString=arrayToString($viajesConPasaj);
-    return $viajesString;
+    return "----VIAJES-----\n".$viajesString;
 }
 
 
@@ -198,12 +199,12 @@ function mostrarViaje($id){
             eliminarViajeConPasajeros($idBorrar,$coleccPasajeros);
         }else{
             $objViaje=new Viaje();
-            $objViaje->Buscar($id);
+            $objViaje->Buscar($idBorrar);
             $resp=$objViaje->eliminar();
-            echo $resp?"Se ha eliminado correctamente el viaje\n":$objViaje->getmensajeoperacion();
+            echo $resp?"Se ha eliminado correctamente el viaje.\n":$objViaje->getmensajeoperacion();
         }
     }else{
-        echo "No existe el viaje con el id. ingresado\n";
+        echo "No existe el viaje con el código ingresado.\n";
     }
  }
 
@@ -251,12 +252,15 @@ function cargarViaje(){
     $destino = trim(fgets(STDIN));
     existeDestino($destino);
     if(existeDestino($destino)){
-        echo "No es posible crear un viaje con un destino ya creado \n";
+        echo "No es posible crear un viaje con un destino ya creado. \n";
     }else{
-        echo "Destino ingresado correctamente \n";
+        echo "Destino ingresado correctamente. \n";
         echo "Ingrese la capacidad máxima de pasajeros: ";
         $capMaxima=intval(trim(fgets(STDIN)));
-    
+        while($capMaxima<=0){
+            echo "La capacidad máxima deberá ser mayor a 0. Vuelva a ingresarla: \n";
+            $capMaxima=intval(trim(fgets(STDIN)));
+        }
         echo "Escoja alguna empresa de viaje:\n";
         verEmpresas();
         echo "Ingrese el numero de empresa elegido o 0 para crear una nueva: \n";
@@ -354,7 +358,7 @@ function verResponsables(){
         }
     }
     if(count($responsablesMostrar)==0){
-        echo "No hay empleados libres. Deberá crear uno nuevo \n";
+        echo "No hay empleados libres. Deberá crear uno nuevo. \n";
     }
     echo arrayToString($responsablesMostrar);
 }
@@ -381,7 +385,7 @@ function cargarResponsable(){
     $objResp=new ResponsableV();
     $objResp->cargar($licencia,$nombre,$apellido);
     $resultadoRespo=$objResp->insertar();
-    echo $resultadoRespo?"Responsable cargado ok \n":$objResp->getmensajeoperacion();
+    echo $resultadoRespo?"Responsable cargado ok. \n":$objResp->getmensajeoperacion();
     $resp=$objResp->obtenerUltimoId();
     $objResp->setNumEmpleado($resp);
     return $objResp;
@@ -405,7 +409,7 @@ function cargarDatos($capMaxima,$objViaje){
     do{
         $cont+=1;
         if(($cont+1)>$capMaxima){
-            echo "Ha llegado al número de pasajeros máximo permitido \n";
+            echo "Ha llegado al número de pasajeros máximo permitido. \n";
             $resp="no";
         }else{
             solicitarDatosPersona($cont,$objViaje);
@@ -433,9 +437,9 @@ function solicitarDatosPersona($cont,$objViaje){
         $resultadoPasajero=$objPasajero->insertar();
         //Tambien los voy seteando al objeto para luego de creado el viaje al hacer el echo me los muestre:
         $objViaje->setearPasajeroUnoaUno($objPasajero);
-        echo $resultadoPasajero?"Pasajero cargado ok\n":$objPasajero->getmensajeoperacion();
+        echo $resultadoPasajero?"Pasajero cargado ok.\n":$objPasajero->getmensajeoperacion();
     }elseif(pasajeroCargado($dni)){
-        echo "El dni ingresado pertenece a un pasajero ya ingresado, por favor ingrese un dni distinto \n";
+        echo "El dni ingresado pertenece a un pasajero ya ingresado, por favor ingrese un dni distinto. \n";
         solicitarDatosPersona($cont,$objViaje);
     }
 }
@@ -470,10 +474,10 @@ function modificarViaje(){
             } 
         }else{
             echo "El viaje no posee pasajeros. Para agregarlos elija en el menú Viajes la opción 6, y el id: ".$id.
-            "\nRecuerde que la capacidad máxima del viaje es de".$viaje->getCantMaximaPasajeros()." pasajeros.\n \n";
+            "\nRecuerde que la capacidad máxima del viaje es de ".$viaje->getCantMaximaPasajeros()." pasajeros.\n";
         }
     }else{
-        echo "No existe el viaje con el id. ingresado \n";
+        echo "No existe el viaje con el id. ingresado. \n";
     }
 }
 
@@ -484,8 +488,11 @@ function modificarDatosViaje($id){
     //Luego pedimos los datos, los seteamos en php, al final modificamos en la bd:
     echo "Ingrese el nuevo destino: ";
     $destNuevo=trim(fgets(STDIN));
-    $obj->setDestino($destNuevo);
-
+    if(existeDestino($destNuevo)){
+        echo "No es posible modificar el viaje con el nuevo destino. Ya existe un viaje con el destino ingresado. \n";
+    }else{
+        $obj->setDestino($destNuevo);
+    }
     $cantMaximaPasajeros=solicitarCapMaxima($id);
     $obj->setCantMaximaPasajeros($cantMaximaPasajeros);
 
@@ -502,7 +509,7 @@ function modificarDatosViaje($id){
     $obj->setIdaVuelta($IV);
 
     $viajeModificado=$obj->modificar();
-    echo $viajeModificado?"Viaje modificado ok\n":$obj->getmensajeoperacion();
+    echo $viajeModificado?"Viaje modificado ok.\n":$obj->getmensajeoperacion();
 }
 
 function solicitarCapMaxima($id){
@@ -512,6 +519,10 @@ function solicitarCapMaxima($id){
     //echo $cantPasajeros;
     echo "Ingrese la capacidad máxima de pasajeros: ";
     $nuevaCapMaxima=trim(fgets(STDIN));
+    while($nuevaCapMaxima<=0){
+        echo "La capacidad máxima deberá ser mayor a 0. Vuelva a ingresar un valor válido: ";
+        $nuevaCapMaxima=intval(trim(fgets(STDIN)));
+    }
     while ($nuevaCapMaxima<$cantPasajeros){
         echo "Por favor, debe ingresar una capacidad mayor o igual a la cantidad actual de pasajeros. De lo contrario, cree un nuevo viaje: ";
         $nuevaCapMaxima=trim(fgets(STDIN));
@@ -525,7 +536,7 @@ function ingresarDatos($id){
     $dni=trim(fgets(STDIN));
     $datos=$objViaje->buscarPasajero($dni);
     if ($datos=="error"){
-        echo "No existe un pasajero con ese dato, desea volver a buscar con otro dni? (si/no): ";
+        echo "No existe un pasajero en este viaje con ese dato, desea volver a buscar con otro dni? (si/no): ";
         $resp=trim(fgets(STDIN));
         if($resp=='si'){
             ingresarDatos($id);
@@ -535,7 +546,7 @@ function ingresarDatos($id){
         $ind=$datos[1];
         //traer ese pasajero de la BD:
         $resPasajero=$pasajero->Buscar($dni);
-        echo $resPasajero?"Pasajero encontrado en viaje OK \n":$pasajero->getmensajeoperacion();
+        echo $resPasajero?"Pasajero encontrado en viaje OK. \n":$pasajero->getmensajeoperacion();
         echo "Pasajero a modificar: ".$pasajero;
 
         echo "Ingrese el nombre correcto: ";
@@ -571,7 +582,7 @@ function agregarPasajeros(){
         if($totalPasaj<$capMaxima){
             cargarDatos($capMaxima,$viaje);
         }else{
-            echo "El viaje se encuentra lleno \n";
+            echo "El viaje se encuentra lleno. \n";
         }
         echo $viaje;
     }else{
@@ -588,10 +599,14 @@ function eliminarPasajeros(){
         $viaje=new Viaje();
         $viaje=setearPasajeros($idViaje);
         //asi obtengo el obj. viaje con los pasajeros
-        echo $viaje;
-        eliminaPasajero($viaje);
+        if (count($viaje->getPasajeros())==0){
+            echo "El viaje seleccionado no posee pasajeros. \n";
+        }else{
+            echo $viaje;
+            eliminaPasajero($viaje);
+        }
     }else{
-        echo "No existe el viaje con el id. ingresado \n";
+        echo "No existe el viaje con el id. ingresado. \n";
     }
 }
 

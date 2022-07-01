@@ -131,7 +131,7 @@ class Empresa{
 		if ($condicion!=""){
 		    $consultaEmpresa=$consultaEmpresa.' where '.$condicion;
 		}
-		$consultaEmpresa.=" order by enombre ";
+		$consultaEmpresa.=" order by idempresa ";
 		//echo $consultaEmpresa;
 		if($base->Iniciar()){
 			if($base->Ejecutar($consultaEmpresa)){				

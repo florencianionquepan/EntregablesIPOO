@@ -71,7 +71,7 @@ class Pasajero{
 
     public function __toString(){
         return "Nombre:".$this->getNombre().". Apellido:".$this->getApellido().
-                ". DNI:".$this->getDni().". Telefono:".$this->getTelefono()."\n";
+                ". DNI:".$this->getDni().". Telefono:".$this->getTelefono().".\n";
     }
 
 
