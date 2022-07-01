@@ -66,17 +66,20 @@ class Empresa{
 	}
 
 	private function verViajes(){
-		$msn="";
         $viajes=$this->getColeccViajes();
-        for ($i=0;$i<count($viajes);$i++){
-            $msn=$msn.$viajes[$i]; 
-        }
-        return $msn;
+		$msn="";
+		if(count($viajes)>0){
+			$msn="Los viajes que posee son: \n";
+		}
+		for ($i=0;$i<count($viajes);$i++){
+			$msn=$msn.$viajes[$i]."\n"; 
+		}
+		return $msn;
 	}
 
     public function __toString(){
-    return "id:".$this->getIdEmpresa().". Nombre:".$this->getNombre().". Dirección:".$this->getDireccion().
-				$this->verViajes()."\n"; 
+    return "id:".$this->getIdEmpresa().". Nombre:".$this->getNombre().". Dirección:".$this->getDireccion()."\n".
+				$this->verViajes(); 
     }
 
 	public function obtenerUltimoId(){
