@@ -149,6 +149,9 @@ class Viaje{
         $personas=[];
         $personas=$this->getPasajeros();
         $infoPersonas="";
+        if(count($personas)>0){
+            $infoPersonas="\nDatos de Pasajeros:\n";
+        }
         for ($i=0;$i<count($personas);$i++){
             $infoPersonas=$infoPersonas.$personas[$i]; 
         }
@@ -160,7 +163,7 @@ class Viaje{
         ".Limite de pasajeros: ".$this->getCantMaximaPasajeros().
         ". \nDatos del responsable de viaje: ".$this->getResponsableV()."Empresa:".$this->getObjEmpresa(). 
         "Importe del viaje:".$this->getImporte().". Tipo de asiento:".$this->getTipoAsiento().
-        ".Ida y vuelta:".$this->getIdaVuelta()."\nDatos de Pasajeros:\n".$this->verPasajeros()."\n";
+        ".Ida y vuelta:".$this->getIdaVuelta().$this->verPasajeros()."\n";
     }
     
     
